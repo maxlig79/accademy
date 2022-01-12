@@ -4,10 +4,17 @@
 
 using namespace boost::algorithm;
 
+class Max{
+public:
+  int ComputeMax(int x, int y, int z){
+    if( x>=y && x>=z ) { return x; } 
+      else if( y>=x && y>=z) { return y; }
+        else { return z; }
+  }
+};
+
 int main()
 {
-  std::string s = "\t Boost C++ Libraries \t";
-  std::cout << "_" << trim_left_copy(s) << "_\n";
-  std::cout << "_" << trim_right_copy(s) << "_\n";
-  std::cout << "_" << trim_copy(s) << "_\n";
+Max nr;
+std::cout<<nr.ComputeMax(5,1,3)<<std::endl;
 }
