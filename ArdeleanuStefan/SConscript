@@ -1,9 +1,11 @@
+from SCons.Environment import Environment
 # This is a comment
 env = Environment(
-                CCFLAGS = ['-g'], 
-                CPPPATH=['include'], 
-                LIBS=['lmaxim'],
-                LIBPATH='build') 
+    CCFLAGS=['-g'],
+    CPPPATH=['include'],
+    LIBS=['lmaxim'],
+    LIBPATH='build')
 env.Library('lmaxim', 'src/Maxim.cpp')
-maxim = env.Program(target = "maxim", source = ["src/Maxim_main.cpp"])
-tests = env.Program(target = "test", source = ["src/Test.cpp"], LIBS=['boost_unit_test_framework', 'lmaxim'])
+maxim = env.Program(target="maxim", source=["src/Maxim_main.cpp"])
+tests = env.Program(target="test", source=[
+                    "src/Test.cpp"], LIBS=['boost_unit_test_framework', 'lmaxim'])

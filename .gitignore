@@ -33,3 +33,5 @@
 
 .sconsign.dblite
 build/
+.vscode
+*.code-workspace
