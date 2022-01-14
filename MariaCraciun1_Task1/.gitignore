@@ -32,6 +32,8 @@
 *.app
 
 .sconsign.dblite
+*.gcda
+*.gcno
 build/
 .vscode
 *.code-workspace
