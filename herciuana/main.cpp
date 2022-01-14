@@ -1,7 +1,6 @@
 #include <iostream>
 #include "max.hpp"
 
-
 int main()
 {
     maxim Max;
