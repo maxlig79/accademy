@@ -31,6 +31,8 @@
 *.out
 *.app
 
-*.dblite
+.sconsign.dblite
 build/
-.vscode/
+.vscode
+*.code-workspace
+
