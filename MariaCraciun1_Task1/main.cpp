@@ -1,12 +1,9 @@
-#include <boost/algorithm/string.hpp>
-#include <string>
 #include <iostream>
-#include "Max.h"
-using namespace boost::algorithm;
+#include "Max.hpp"
 
 int main()
 {
-Max nr;
-std::cout<<nr.ComputeMax(5,1,3)<<std::endl;
+
+std::cout<<Max::ComputeMax(5,1,3)<<std::endl;
 
 }
