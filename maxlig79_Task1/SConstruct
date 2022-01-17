@@ -1,0 +1,5 @@
+# This is a comment
+env = Environment()   # Create an environmnet
+env.Append(CCFLAGS = ['-g'])
+env.Program(target = "main", source = ["main.cpp"])
+env.Program(target = "test", source = ["test.cpp"], LIBS = ["boost_unit_test_framework"] )
