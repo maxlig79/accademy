@@ -1,0 +1,6 @@
+Program(target="main_max",source=["main.cpp"],CPPPATH=["./include"],LIBPATH=["."],LIBS=["max"])
+Library(target="max",source=["src/Max3.cpp"],CPPPATH=["./include"])
+
+#Program(target="test_max",source=["test/Max3.cpp", "src/Max3.cpp"],CPPPATH=["./include"],LIBS=["boost_unit_test_framework"])
+boost_test_lib = File("/usr/lib/libboost_unit_test_framework.a")
+test = Program(target="test_max",source=["test/Max3.cpp"],CPPPATH=["./include"],LIBPATH=["."],LIBS=[boost_test_lib, "max"])
