@@ -3,5 +3,5 @@
 
 int main()
 {
-    std::cout<<"Under construction"<<std::endl;
+    std::cout<<"Under Construction"<<std::endl;
 }

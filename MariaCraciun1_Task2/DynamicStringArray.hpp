@@ -1,6 +1,6 @@
 #pragma once
 
-class DynamicStringArray 
+class DynamicStringArray
 {
-    std::cout<<"Under Construction"<<std::endl;
+
 };
