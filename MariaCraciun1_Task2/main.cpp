@@ -1,7 +1,7 @@
 #include <iostream>
-#include <DynamicStringArray.hpp>
+#include "DynamicStringArray.hpp"
 
 int main()
 {
-    std::cout<<"Under Construction"<<std::endl;
+    //TODO: Embed your class in a suitable test program.
 }
