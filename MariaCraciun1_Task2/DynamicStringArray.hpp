@@ -1,4 +1,6 @@
 #pragma once
+
+#include<iostream>
 #include<string>
 
 class DynamicStringArray{
@@ -13,6 +15,6 @@ public:
     int getLength() const;
     void addEntry(const std::string &str);
     bool deleteEntry(const std::string &str);
-    std::string getEntry(const int &index) const;
+    std::string *getEntry(const int &index);
     ~DynamicStringArray();
 };
