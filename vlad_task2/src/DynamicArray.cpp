@@ -80,7 +80,6 @@ std::string DynamicArray::getEntry(const size_t index) const
 
 void DynamicArray::addEntry(const std::string &entry)
 {
-    printf("m_size=%zd\n",m_size);
     reallocate(m_size + 1);
     m_dynamicArray[m_size - 1] = entry;
 }

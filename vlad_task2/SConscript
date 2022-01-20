@@ -1,7 +1,7 @@
 from subprocess import check_output
 
 test = ARGUMENTS.get("test", 0)
-test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g"])
+test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g", "-O0"])
 if test:
     env = test_env.Clone()
 else:
@@ -13,12 +13,13 @@ target_sources = Glob("src/*.cpp")
 lib = env.Library("dynamic_array", target_sources)
 
 if test:
-    test_lib = check_output(["locate", "boost_unit_test_framework.a"])
+    test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
+    test_lib = File(test_lib.decode())
     test_sources = Glob("test/*.cpp")
-    env.Program("test_arr", LIBS=[test_lib, lib, "gcov"])
+    env.Program("test_arr", test_sources, LIBS=[test_lib, lib, "gcov"])
 
 main_libs = [lib]
 if test:
     main_libs.append("gcov")
     
-env.Program("main", ["main.cpp"], LIBS=[lib])
+env.Program("main", ["main.cpp"], LIBS=main_libs)
