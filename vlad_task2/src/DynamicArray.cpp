@@ -50,18 +50,19 @@ DynamicArray &DynamicArray::operator=(DynamicArray &&source)
     return *this;
 }
 
-void DynamicArray::deleteEntry(const std::string &entry)
+bool DynamicArray::deleteEntry(const std::string &entry)
 {
-    std::string *out = new std::string[m_size];
-    size_t newSize = 0;
-    std::copy_if(m_dynamicArray, m_dynamicArray + m_size, out, [&](const std::string el)
-                 {
-                     newSize += el != entry;
-                     return el != entry;
-                 });
-    m_size = newSize;
-    delete[] m_dynamicArray;
-    m_dynamicArray = out;
+    size_t occurences = std::count(m_dynamicArray, m_dynamicArray + m_size, entry);
+    if (occurences)
+    {
+        std::string *out = new std::string[m_size - occurences];
+        size_t newSize = m_size - occurences;
+        std::copy_if(m_dynamicArray, m_dynamicArray + m_size, out, std::bind(std::not_equal_to(), entry, std::placeholders::_1));
+        m_size = newSize;
+        delete[] m_dynamicArray;
+        m_dynamicArray = out;
+    }
+    return occurences;
 }
 
 std::string DynamicArray::getEntry(const size_t index) const

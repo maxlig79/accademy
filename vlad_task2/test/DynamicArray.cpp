@@ -24,11 +24,14 @@ BOOST_AUTO_TEST_CASE(DynamicArray_deleteEntry)
     arr.addEntry("s2");
     arr.addEntry("s3");
 
-    arr.deleteEntry("s2");
+    BOOST_CHECK(arr.deleteEntry("s2"));
 
     BOOST_CHECK(arr.size() == 2);
     BOOST_CHECK(arr.getEntry(0) == "s1");
     BOOST_CHECK(arr.getEntry(1) == "s3");
+
+    BOOST_CHECK(!arr.deleteEntry("s2"));
+    BOOST_CHECK(!arr.deleteEntry("s4"));
 }
 
 BOOST_AUTO_TEST_CASE(DynamicArray_move)

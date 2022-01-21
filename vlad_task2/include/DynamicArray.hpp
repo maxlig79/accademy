@@ -14,7 +14,7 @@ public:
     ~DynamicArray();
     
 public:
-    void deleteEntry(const std::string &entry);
+    bool deleteEntry(const std::string &entry);
     void addEntry(const std::string &entry);
     std::string getEntry(size_t index) const;
     size_t size() const;
