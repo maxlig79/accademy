@@ -51,8 +51,6 @@
                 tempArray[j] = dynamicArray[i] ;
                 j++ ;
         }
-        delete[] dynamicArray ; 
-        dynamicArray = nullptr ;
         dynamicArray = tempArray ;
         size-- ;
 
@@ -67,7 +65,6 @@
    }
 
     DynamicStringArray::~DynamicStringArray () {
-       //A destructor that frees up the memory allocated to the dynamic array. 
        if ( dynamicArray != nullptr ) {
             delete[] dynamicArray ;
             dynamicArray = nullptr ;

@@ -1,6 +1,0 @@
-from SCons.Environment import Environment
-
-env = Environment()
-env.Append(CPPFLAGS=['-g', '-fprofile-arcs', '-ftest-coverage'])
-env.Program(target= "main", source= ["main.cpp"], LIBS = ["gcov"] )
-env.Program(target= "test", source= ["boostTest.cpp"], LIBS= ["boost_unit_test_framework", "gcov"])

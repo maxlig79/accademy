@@ -1,4 +1,0 @@
-from SCons.Script import *
-import subprocess
-subprocess.run(["mkdir", "build"])
-SConscript('SConscript', variant_dir='build', duplicate=0)
