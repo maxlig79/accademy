@@ -1,5 +1,8 @@
 from subprocess import check_output
 
+#If test is enabled, make the test executable and the library with test flags
+#otherwise just build the library without the test flags
+
 test = ARGUMENTS.get("test", 0)
 test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g", "-O0"])
 if test:
@@ -22,4 +25,3 @@ main_libs = [lib]
 if test:
     main_libs.append("gcov")
     
-env.Program("main", ["main.cpp"], LIBS=main_libs)

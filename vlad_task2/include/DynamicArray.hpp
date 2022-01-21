@@ -7,13 +7,10 @@ class DynamicArray
 {
 public:
     DynamicArray();
-    DynamicArray(size_t _size);
     DynamicArray(const DynamicArray &other);
     DynamicArray(DynamicArray &&source);
     DynamicArray &operator=(const DynamicArray &other);
     DynamicArray &operator=(DynamicArray &&source);
-    std::string &operator[](const size_t index);
-    const std::string&operator[](const size_t index) const;
     ~DynamicArray();
     
 public:
@@ -25,7 +22,7 @@ public:
 private:
     std::string *m_dynamicArray;
     size_t m_size;
-    void reallocate(size_t newSize);
+    void reallocate();
 };
 
 #endif

@@ -1,17 +1,10 @@
 #include <DynamicArray.hpp>
 #include <algorithm>
+#include <stdexcept>
 #include <cmath>
 
-DynamicArray::DynamicArray()
+DynamicArray::DynamicArray() : m_dynamicArray(nullptr), m_size(0)
 {
-    m_dynamicArray = nullptr;
-    m_size = 0;
-}
-
-DynamicArray::DynamicArray(size_t _size)
-{
-    m_dynamicArray = new std::string[_size];
-    m_size = 0;
 }
 
 DynamicArray::DynamicArray(const DynamicArray &other)
@@ -28,46 +21,44 @@ DynamicArray::~DynamicArray()
 
 DynamicArray::DynamicArray(DynamicArray &&source)
 {
-    m_dynamicArray = std::move(source.m_dynamicArray);
+    m_dynamicArray = source.m_dynamicArray;
+    source.m_dynamicArray = nullptr;
     m_size = std::move(source.m_size);
 }
 
 DynamicArray &DynamicArray::operator=(const DynamicArray &other)
 {
-    if (&other == this)
+    if (this != &other)
     {
-        return *this;
+        delete[] m_dynamicArray;
+        m_size = other.m_size;
+        m_dynamicArray = new std::string[m_size];
+        std::copy_n(other.m_dynamicArray, m_size, m_dynamicArray);
     }
-    delete[] m_dynamicArray;
-    m_size = other.m_size;
-    m_dynamicArray = new std::string[m_size];
-    std::copy_n(other.m_dynamicArray, m_size, m_dynamicArray);
     return *this;
 }
 
 DynamicArray &DynamicArray::operator=(DynamicArray &&source)
 {
-    delete[] m_dynamicArray;
-    m_dynamicArray = std::move(source.m_dynamicArray);
-    m_size = std::move(source.m_size);
+    if (this != &source)
+    {
+        delete[] m_dynamicArray;
+        m_dynamicArray = std::move(source.m_dynamicArray);
+        source.m_dynamicArray = nullptr;
+        m_size = std::move(source.m_size);
+    }
     return *this;
-}
-
-std::string &DynamicArray::operator[](const size_t index)
-{
-    return m_dynamicArray[index];
-}
-
-const std::string &DynamicArray::operator[](const size_t index) const
-{
-    return m_dynamicArray[index];
 }
 
 void DynamicArray::deleteEntry(const std::string &entry)
 {
     std::string *out = new std::string[m_size];
     size_t newSize = 0;
-    std::copy_if(m_dynamicArray, m_dynamicArray + m_size, out, [&](const std::string el) {return el != entry; newSize += el != entry;});
+    std::copy_if(m_dynamicArray, m_dynamicArray + m_size, out, [&](const std::string el)
+                 {
+                     newSize += el != entry;
+                     return el != entry;
+                 });
     m_size = newSize;
     delete[] m_dynamicArray;
     m_dynamicArray = out;
@@ -75,12 +66,16 @@ void DynamicArray::deleteEntry(const std::string &entry)
 
 std::string DynamicArray::getEntry(const size_t index) const
 {
+    if (index >= m_size)
+    {
+        throw std::out_of_range("DynamicArray: index out of range");
+    }
     return m_dynamicArray[index];
 }
 
 void DynamicArray::addEntry(const std::string &entry)
 {
-    reallocate(m_size + 1);
+    reallocate();
     m_dynamicArray[m_size - 1] = entry;
 }
 
@@ -89,8 +84,9 @@ size_t DynamicArray::size() const
     return m_size;
 }
 
-void DynamicArray::reallocate(size_t newSize)
+void DynamicArray::reallocate()
 {
+    size_t newSize = m_size + 1;
     std::string *newArray = new std::string[newSize];
     std::copy_n(m_dynamicArray, m_size, newArray);
     delete[] m_dynamicArray;
