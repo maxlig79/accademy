@@ -54,3 +54,19 @@ string DynamicStringArray::getEntry(const int index) const
         return dynamicArray[index];
     }
 }
+
+DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
+{
+    size=obj.get_Size();
+    dynamicArray=new string[size];
+    for(int i=0;i<size;i++)
+    {
+        dynamicArray[i]=obj.getEntry(i);
+    }
+}
+
+
+DynamicStringArray::~DynamicStringArray()
+{
+    delete[] dynamicArray;
+}
