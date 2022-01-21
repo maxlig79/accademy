@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE TEST_DYNAMIC_STRING_ARRAY
+#define BOOST_TEST_MODULE TEST
 #include <boost/test/included/unit_test.hpp>
 #include "DynamicStringArray.hpp"
 
