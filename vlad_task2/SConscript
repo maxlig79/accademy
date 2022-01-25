@@ -4,7 +4,7 @@ from subprocess import check_output
 #otherwise just build the library without the test flags
 
 test = ARGUMENTS.get("test", 0)
-test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g", "-O0"])
+test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g", "--no-elide-constructors"])
 if test:
     env = test_env.Clone()
 else:
@@ -19,7 +19,7 @@ if test:
     test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
     test_lib = File(test_lib.decode())
     test_sources = Glob("test/*.cpp")
-    env.Program("test_arr", test_sources, LIBS=[test_lib, lib, "gcov"])
+    env.Program("test_arr", test_sources, LIBS=[test_lib, lib, "gcov"], CXXFLAGS=["--no-elide-constructors"])
 
 main_libs = [lib]
 if test:

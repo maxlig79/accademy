@@ -2,12 +2,14 @@
 #define DYNAMIC_ARRAY_H_
 
 #include <string>
+#include <vector>
 
 class DynamicArray
 {
 public:
     DynamicArray();
     DynamicArray(const DynamicArray &other);
+    DynamicArray(const std::vector<std::string> &container);
     DynamicArray(DynamicArray &&source);
     DynamicArray &operator=(const DynamicArray &other);
     DynamicArray &operator=(DynamicArray &&source);

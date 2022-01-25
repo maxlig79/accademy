@@ -14,6 +14,13 @@ DynamicArray::DynamicArray(const DynamicArray &other)
     std::copy_n(other.m_dynamicArray, m_size, m_dynamicArray);
 }
 
+DynamicArray::DynamicArray(const std::vector<std::string> &other)
+{
+    m_size = other.size();
+    m_dynamicArray = new std::string[m_size];
+    std::copy_n(other.begin(), m_size, m_dynamicArray);
+}
+
 DynamicArray::~DynamicArray()
 {
     delete[] m_dynamicArray;
@@ -28,6 +35,7 @@ DynamicArray::DynamicArray(DynamicArray &&source)
 
 DynamicArray &DynamicArray::operator=(const DynamicArray &other)
 {
+    
     if (this != &other)
     {
         delete[] m_dynamicArray;
