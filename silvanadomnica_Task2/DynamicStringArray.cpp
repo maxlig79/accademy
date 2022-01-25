@@ -76,10 +76,11 @@ DynamicStringArray::~DynamicStringArray()
 {
     delete[] dynamicArray;
 }
-DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
+DynamicStringArray&DynamicStringArray::operator=(const DynamicStringArray &obj)
 {
     if (&obj != this)
     {
+        delete[] dynamicArray;
         size = obj.size;
         dynamicArray = new string[size];
         for (int i = 0; i < size; i++)
