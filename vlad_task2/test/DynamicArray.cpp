@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <DynamicArray.hpp>
 #include <iostream>
+#include <vector>
 
 BOOST_AUTO_TEST_CASE(DynamicArray_getEntry)
 {
@@ -52,6 +53,9 @@ BOOST_AUTO_TEST_CASE(DynamicArray_move)
 
     BOOST_CHECK(arr3.getEntry(0) == "s1");
     BOOST_CHECK(arr3.getEntry(1) == "s2");
+
+    DynamicArray arr4;
+    arr4 = DynamicArray(std::vector<std::string>{"Move","is","better"});
 }
 
 BOOST_AUTO_TEST_CASE(DynamicArray_copy)
@@ -76,4 +80,13 @@ BOOST_AUTO_TEST_CASE(DynamicArray_copy)
     BOOST_CHECK(arr3.size() == 2);
     BOOST_CHECK(arr3.getEntry(0) == "s1");
     BOOST_CHECK(arr3.getEntry(1) == "s2");
+}
+
+BOOST_AUTO_TEST_CASE(DynamicArray_container)
+{
+    DynamicArray sarray(DynamicArray(std::vector<std::string>{"Move", "is", "better"}));
+    BOOST_CHECK(sarray.size() == 3);
+    BOOST_CHECK(sarray.getEntry(0) == "Move");
+    BOOST_CHECK(sarray.getEntry(1) == "is");
+    BOOST_CHECK(sarray.getEntry(2) == "better");
 }
