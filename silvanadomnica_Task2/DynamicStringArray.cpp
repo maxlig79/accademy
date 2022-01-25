@@ -1,9 +1,8 @@
 #include "DynamicStringArray.hpp"
 
-DynamicStringArray::DynamicStringArray()
+DynamicStringArray::DynamicStringArray() :size(0), dynamicArray(nullptr)
 {
-    dynamicArray = nullptr;
-    size = 0;
+  
 }
 int DynamicStringArray::getSize() const
 {
