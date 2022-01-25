@@ -52,8 +52,7 @@ BOOST_AUTO_TEST_CASE(test_4_max)
 
 BOOST_AUTO_TEST_CASE(test_5_max)
 {
-    std::vector<std::string> inputs{"unu", "doi", "trei"};
-    DynamicStringArray obj1(inputs);
+    DynamicStringArray obj1(DynamicStringArray(std::vector<std::string>{"unu", "doi", "trei"}));
     BOOST_CHECK(*obj1.getEntry(0) == "unu");
     BOOST_CHECK(*obj1.getEntry(1) == "doi");
     BOOST_CHECK(*obj1.getEntry(2) == "trei");
@@ -64,7 +63,21 @@ BOOST_AUTO_TEST_CASE(test_6_max)
 {
     std::vector<std::string> inputs{"unu", "doi", "trei"};
     DynamicStringArray obj1(inputs);
-    DynamicStringArray obj2{std::move(obj1)};
+    DynamicStringArray obj2(std::move(obj1));
+    BOOST_CHECK(*obj2.getEntry(0) == "unu");
+    BOOST_CHECK(*obj2.getEntry(1) == "doi");
+    BOOST_CHECK(*obj2.getEntry(2) == "trei");
+    BOOST_CHECK(obj2.getEntry(-1) == nullptr);
+    BOOST_CHECK(obj2.get_size() == 3);
+}
+
+BOOST_AUTO_TEST_CASE(test_7_max)
+{
+    std::vector<std::string> inputs{"unu", "doi", "trei"};
+    DynamicStringArray obj1(inputs);
+    DynamicStringArray obj2;
+    obj2 = std::move(obj1);
+    obj2 = std::move(obj2);
     BOOST_CHECK(*obj2.getEntry(0) == "unu");
     BOOST_CHECK(*obj2.getEntry(1) == "doi");
     BOOST_CHECK(*obj2.getEntry(2) == "trei");

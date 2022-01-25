@@ -16,6 +16,20 @@ DynamicStringArray::DynamicStringArray(DynamicStringArray &&obj) : m_size{obj.m_
     obj.dynamicArray = nullptr;
 }
 
+DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&obj) {
+    if (this != &obj)
+    {
+        delete[] dynamicArray;
+        
+        dynamicArray = obj.dynamicArray;
+        m_size = obj.m_size;
+
+        obj.dynamicArray = nullptr;
+        obj.m_size = 0;
+    }
+    return *this;
+}
+
 size_t DynamicStringArray::get_size() const
 {
     return m_size;
@@ -34,18 +48,18 @@ void DynamicStringArray::addEntry(const std::string &input)
 
 bool DynamicStringArray::deleteEntry(const std::string &input)
 {
-    bool ok = false;
+    bool existString = false;
     std::string *temp = nullptr;
     for (size_t i = 0; i < m_size; i++)
     {
         if (dynamicArray[i] == input)
         {
-            ok = true;
+            existString = true;
             break;
         }
     }
 
-    if (ok)
+    if (existString)
     {
         if (m_size > 1)
         {
@@ -65,7 +79,7 @@ bool DynamicStringArray::deleteEntry(const std::string &input)
         dynamicArray = temp;
         --m_size;
     }
-    return ok;
+    return existString;
 }
 
 std::string *DynamicStringArray::getEntry(const int &index) const
