@@ -11,10 +11,10 @@ private:
 public:
     DynamicStringArray();
     int get_Size() const;
-    DynamicStringArray(const DynamicStringArray &obj);
-    int operator=(const DynamicStringArray &obj);
     void addEntry(const string &String);
     bool deleteEntry(const string &String);
     string getEntry(const int index) const;
+    DynamicStringArray(const DynamicStringArray &obj);
+    DynamicStringArray& operator=(const DynamicStringArray &obj); 
     ~DynamicStringArray();
 };

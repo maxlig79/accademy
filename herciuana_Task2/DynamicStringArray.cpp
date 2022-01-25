@@ -20,7 +20,7 @@ void DynamicStringArray::addEntry(const string &String)
     }
     Array[size] = String;
     delete[] dynamicArray;
-    dynamicArray=Array;
+    dynamicArray = Array;
     size++;
 }
 
@@ -57,14 +57,29 @@ string DynamicStringArray::getEntry(const int index) const
 
 DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
 {
-    size=obj.get_Size();
-    dynamicArray=new string[size];
-    for(int i=0;i<size;i++)
+    size = obj.get_Size();
+    dynamicArray = new string[size];
+    for (int i = 0; i < size; i++)
     {
-        dynamicArray[i]=obj.getEntry(i);
+        dynamicArray[i] = obj.getEntry(i);
     }
 }
 
+DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
+{
+    DynamicStringArray temp(obj);
+    if (this->size != 0)
+    {
+        delete[] this->dynamicArray;
+        this->size = obj.get_Size();
+        this->dynamicArray = new string[this->size];
+        for (int i = 0; i < this->size; i++)
+        {
+            this->dynamicArray[i] = obj.getEntry(i);
+        }
+    }
+    return *this;
+}
 
 DynamicStringArray::~DynamicStringArray()
 {
