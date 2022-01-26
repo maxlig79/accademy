@@ -56,7 +56,7 @@ string DynamicStringArray::getEntry(const int index) const
 {
     if (index >= size)
     {
-        return nullptr;
+        return "";
     }
     else
     {
