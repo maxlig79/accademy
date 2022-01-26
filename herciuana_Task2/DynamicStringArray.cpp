@@ -39,14 +39,14 @@ bool DynamicStringArray::deleteEntry(const string &String)
         return r;
     }
     else
-        return size--;
+        return false;
 }
 
 string DynamicStringArray::getEntry(const int index) const
 {
     if ((index < 0) || (index >= size))
     {
-        return NULL;
+        return " ";
     }
     else
     {
