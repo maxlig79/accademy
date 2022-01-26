@@ -1,0 +1,7 @@
+# This is a comment
+env = Environment()   # Create an environmnet
+env.Append(CCFLAGS = ['-g'])
+env.Append(LIBS=['librt', 'pthread'])
+
+env.Program(target = "server", source = ["server.cpp"], LIBS= ["librt", "pthread"])
+env.Program(target = "client", source = ["client.cpp"], LIBS= ["librt", "pthread"])
