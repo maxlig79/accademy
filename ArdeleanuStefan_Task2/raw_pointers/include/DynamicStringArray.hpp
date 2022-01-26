@@ -16,6 +16,7 @@ public:
     DynamicStringArray(const DynamicStringArray &obj);
     DynamicStringArray(const std::vector<std::string> &inputs);
     DynamicStringArray(DynamicStringArray &&obj);
+    DynamicStringArray &operator=(DynamicStringArray &&obj);
     DynamicStringArray &operator=(const DynamicStringArray &obj);
     size_t get_size() const;
     void addEntry(const std::string &);
