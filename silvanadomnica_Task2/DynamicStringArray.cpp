@@ -90,3 +90,11 @@ DynamicStringArray&DynamicStringArray::operator=(const DynamicStringArray &obj)
     }
     return *this;
 }
+DynamicStringArray::DynamicStringArray(DynamicStringArray &&other) : size(0), dynamicArray(nullptr)
+{
+    dynamicArray=other.dynamicArray;
+    size=other.size;
+
+    other.dynamicArray=nullptr;
+    other.size=0;
+} 
