@@ -18,4 +18,5 @@ public:
     DynamicStringArray& operator=(const DynamicStringArray &obj); 
     ~DynamicStringArray();
     DynamicStringArray(DynamicStringArray &&other);
+    DynamicStringArray& operator=(DynamicStringArray &&other);
 };

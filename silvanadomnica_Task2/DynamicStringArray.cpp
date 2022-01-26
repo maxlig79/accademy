@@ -97,4 +97,17 @@ DynamicStringArray::DynamicStringArray(DynamicStringArray &&other) : size(0), dy
 
     other.dynamicArray=nullptr;
     other.size=0;
-} 
+}
+DynamicStringArray&DynamicStringArray::operator=(DynamicStringArray &&other)
+{
+    if (this != &other)
+    {
+        delete[] dynamicArray;
+        dynamicArray=other.dynamicArray;
+        size=other.size;
+        other.dynamicArray=nullptr;
+        other.size=0;
+    }
+    return *this;
+}
+
