@@ -1,0 +1,5 @@
+from SCons.Environment import Environment
+env = Environment()   
+env.Append(CCFLAGS = ['-g'])
+env.Program(target = "main", source = ["DynamicStringArray.cpp"])
+env.Program(target = "test", source = ["TestDynamicArray.cpp"], LIBS = ["boost_unit_test_framework"] )
