@@ -1,8 +1,7 @@
 #include "DynamicStringArray.hpp"
 
-DynamicStringArray::DynamicStringArray() :size(0), dynamicArray(nullptr)
+DynamicStringArray::DynamicStringArray() : size(0), dynamicArray(nullptr)
 {
-  
 }
 int DynamicStringArray::getSize() const
 {
@@ -76,7 +75,7 @@ DynamicStringArray::~DynamicStringArray()
 {
     delete[] dynamicArray;
 }
-DynamicStringArray&DynamicStringArray::operator=(const DynamicStringArray &obj)
+DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
 {
     if (&obj != this)
     {
@@ -92,22 +91,29 @@ DynamicStringArray&DynamicStringArray::operator=(const DynamicStringArray &obj)
 }
 DynamicStringArray::DynamicStringArray(DynamicStringArray &&other) : size(0), dynamicArray(nullptr)
 {
-    dynamicArray=other.dynamicArray;
-    size=other.size;
+    dynamicArray = other.dynamicArray;
+    size = other.size;
 
-    other.dynamicArray=nullptr;
-    other.size=0;
+    other.dynamicArray = nullptr;
+    other.size = 0;
 }
-DynamicStringArray&DynamicStringArray::operator=(DynamicStringArray &&other)
+DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&other)
 {
     if (this != &other)
     {
         delete[] dynamicArray;
-        dynamicArray=other.dynamicArray;
-        size=other.size;
-        other.dynamicArray=nullptr;
-        other.size=0;
+        dynamicArray = other.dynamicArray;
+        size = other.size;
+        other.dynamicArray = nullptr;
+        other.size = 0;
     }
     return *this;
 }
-
+DynamicStringArray::DynamicStringArray(const vector<string> &obj) : DynamicStringArray()
+{
+    for (auto i : obj)
+    {       
+        DynamicStringArray::addEntry(i);
+        
+    }
+}

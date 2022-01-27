@@ -1,5 +1,6 @@
 from SCons.Environment import Environment
-env = Environment()   
-env.Append(CCFLAGS = ['-g'])
-env.Program(target = "main", source = ["DynamicStringArray.cpp"])
-env.Program(target = "test", source = ["TestDynamicArray.cpp"], LIBS = ["boost_unit_test_framework"] )
+
+env=Environment()
+env.Append(CPPFlags=['-g', '-fprofile-arcs', '-ftest-coverage'])
+env.Program(target= 'main', source= ['main.cpp', 'DynamicStringArray.cpp'], LIBS=['gcov'])
+env.Program(target= 'BoostTest', source= ['TestDynamicArray.cpp', 'DynamicStringArray.o'], LIBS=['gcov', 'boost_unit_test_framework'])
