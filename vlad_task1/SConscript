@@ -1,0 +1,9 @@
+import os
+boost_path = "/usr/lib/x86_64-linux-gnu/"
+Program(target="main_max",source=["main.cpp"],CPPPATH=["./include"],LIBPATH=["."],LIBS=["max", "gcov"],CXXFLAGS=["-ftest-coverage","-fprofile-arcs", "-O0", "-g"])
+Library(target="max",source=["src/Max3.cpp"],CPPPATH=["./include"],CXXFLAGS=["-ftest-coverage","-fprofile-arcs", "-O0", "-g"])
+
+#Program(target="test_max",source=["test/Max3.cpp", "src/Max3.cpp"],CPPPATH=["./include"],LIBS=["boost_unit_test_framework"])
+#boost_test_lib = File("/usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a")
+boost_test_lib = File(os.path.join(boost_path, "libboost_unit_test_framework.a"))
+test = Program(target="test_max",source=["test/Max3.cpp"],CPPPATH=["./include"],LIBPATH=["."],LIBS=[boost_test_lib, "max", "gcov"],CXXFLAGS=["-ftest-coverage","-fprofile-arcs", "-O0", "-g"])

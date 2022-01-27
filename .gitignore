@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+.sconsign.dblite
+build/
+**/.vscode/
+.vscode
+*.code-workspace
+*.gcda
+*.gcno
+
