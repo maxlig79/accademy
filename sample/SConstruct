@@ -1,4 +1,0 @@
-# This is a comment
-env = Environment()   # Create an environmnet
-env.Append(CCFLAGS = ['-g'])
-env.Program(target = "test", source = ["main.cpp"])
