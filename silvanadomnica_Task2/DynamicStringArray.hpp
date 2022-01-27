@@ -1,6 +1,8 @@
 #include <string>
+#include <vector>
 
 using std::string;
+using std::vector;
 
 class DynamicStringArray
 {
@@ -17,4 +19,7 @@ public:
     DynamicStringArray(const DynamicStringArray &obj);
     DynamicStringArray& operator=(const DynamicStringArray &obj); 
     ~DynamicStringArray();
+    DynamicStringArray(DynamicStringArray &&other);
+    DynamicStringArray& operator=(DynamicStringArray &&other);
+    DynamicStringArray(const vector<string> &obj);
 };
