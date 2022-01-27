@@ -55,4 +55,13 @@ BOOST_AUTO_TEST_CASE(test6)
     BOOST_CHECK(sarray.getEntry(1) == "is");
     BOOST_CHECK(sarray.getEntry(2) == "better");
 }
+BOOST_AUTO_TEST_CASE(test7)
+{
+    DynamicStringArray sarray(DynamicStringArray(vector<string>{"Move", "is", "better"}));
+    DynamicStringArray obj;
+    obj = std::move(sarray);
+    BOOST_CHECK(obj.getSize() == 3);
+    BOOST_CHECK(obj.getEntry(0) == "Move");
+    BOOST_CHECK(obj.getEntry(1) == "is");
+}
 BOOST_AUTO_TEST_SUITE_END()
