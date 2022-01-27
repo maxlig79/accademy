@@ -89,11 +89,8 @@ DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
     }
     return *this;
 }
-DynamicStringArray::DynamicStringArray(DynamicStringArray &&other) : size(0), dynamicArray(nullptr)
+DynamicStringArray::DynamicStringArray(DynamicStringArray &&other) : size(other.size), dynamicArray(other.dynamicArray)
 {
-    dynamicArray = other.dynamicArray;
-    size = other.size;
-
     other.dynamicArray = nullptr;
     other.size = 0;
 }
@@ -112,8 +109,7 @@ DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&other)
 DynamicStringArray::DynamicStringArray(const vector<string> &obj) : DynamicStringArray()
 {
     for (auto i : obj)
-    {       
+    {
         DynamicStringArray::addEntry(i);
-        
     }
 }
