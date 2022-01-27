@@ -17,7 +17,7 @@ void DynamicStringArray::addEntry(const string &String)
         Array[i] = dynamicArray[i];
     }
     Array[size] = String;
-    // delete[] dynamicArray;
+    delete[] dynamicArray;
     dynamicArray = Array;
     size++;
 }
@@ -25,19 +25,34 @@ void DynamicStringArray::addEntry(const string &String)
 bool DynamicStringArray::deleteEntry(const string &String)
 {
     bool r = false;
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
-        if (dynamicArray[i] == String)
+        if (String == dynamicArray[i])
         {
-            for (int j = i; j < size - 1; j++)
-            {
-                dynamicArray[j] = dynamicArray[j + 1];
-            }
-            size--;
-            return true;
+            r = true;
+            break;
         }
     }
-    return false;
+    if (r == true)
+    {
+        std::string *temp = dynamicArray;
+        dynamicArray = new std::string[size - 1];
+        for (int j; j < size; j++)
+        {
+            if (j < i)
+            {
+                dynamicArray[j] = temp[j];
+            }
+            else if (j > i)
+            {
+                dynamicArray[j - 1] = temp[j];
+            }
+        }
+        size--;
+    }
+
+    return r;
 }
 
 string DynamicStringArray::getEntry(const int index) const
