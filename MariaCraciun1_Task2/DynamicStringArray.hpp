@@ -2,6 +2,7 @@
 
 #include<iostream>
 #include<string>
+#include<vector>
 
 class DynamicStringArray {
 private:
@@ -9,12 +10,15 @@ private:
     std::string *dynamicArray ;
 
 public:
-    DynamicStringArray() ;
-    DynamicStringArray ( const DynamicStringArray& obj ) ;
+    DynamicStringArray () ;
+    DynamicStringArray ( const std::vector < std::string > &str) ;
+    DynamicStringArray ( const DynamicStringArray &obj ) ;
+    DynamicStringArray ( DynamicStringArray &&obj ) ;
     DynamicStringArray & operator = ( const DynamicStringArray &obj ) ;
-    int getLength() const ;
+    DynamicStringArray & operator = ( DynamicStringArray &&obj ) ;
+    int getLength () const ;
     void addEntry ( const std::string &str ) ;
-    bool deleteEntry(const std::string &str ) ;
-    std::string *getEntry ( const int &index ) ;
-    ~DynamicStringArray() ; 
+    bool deleteEntry ( const std::string &str ) ;
+    std::string *getEntry ( const int index ) ;
+    ~DynamicStringArray () ; 
 };
