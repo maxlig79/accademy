@@ -16,13 +16,13 @@ BOOST_AUTO_TEST_CASE(test2)
     array2.addEntry("yes");
     array2.addEntry("no");
     array2.addEntry("probable");
-    BOOST_CHECK_EQUAL(array2.getEntry(0) , "yes");
-    BOOST_CHECK_EQUAL(array2.getEntry(1) , "no");
-    BOOST_CHECK_EQUAL(array2.getEntry(2) , "probable");
+    BOOST_CHECK_EQUAL(array2.getEntry(0), "yes");
+    BOOST_CHECK_EQUAL(array2.getEntry(1), "no");
+    BOOST_CHECK_EQUAL(array2.getEntry(2), "probable");
 }
 BOOST_AUTO_TEST_CASE(test3)
 {
-   DynamicStringArray array3;
+    DynamicStringArray array3;
     array3.addEntry("yes");
     array3.addEntry("no");
     array3.addEntry("probable");
@@ -32,18 +32,32 @@ BOOST_AUTO_TEST_CASE(test3)
 
 BOOST_AUTO_TEST_CASE(test4)
 {
-   DynamicStringArray array4;
+    DynamicStringArray array4;
     array4.addEntry("yes");
     array4.addEntry("no");
     array4.addEntry("yes");
-    DynamicStringArray array5=array4;
+    DynamicStringArray array5 = array4;
     BOOST_CHECK(array4.get_Size() == array5.get_Size());
 }
 BOOST_AUTO_TEST_CASE(test5)
 {
-  DynamicStringArray array6;
+    DynamicStringArray array6;
     array6.addEntry("yes");
     array6.addEntry("no");
-    if(array6.get_Size() != array6.get_Size())
-        BOOST_ERROR( "Error" );
+    if (array6.get_Size() != array6.get_Size())
+        BOOST_ERROR("Error");
 }
+BOOST_AUTO_TEST_CASE(test6)
+{
+    DynamicStringArray SArray(DynamicStringArray(vector<string>{"Move", " is ", "better!"}));
+    SArray.addEntry("Move");
+    SArray.addEntry("is");
+    SArray.addEntry("better");
+    if (SArray.get_Size() == 3)
+    {
+        BOOST_CHECK_EQUAL(SArray.getEntry(0), "Move");
+        BOOST_CHECK_EQUAL(SArray.getEntry(1), "is");
+        BOOST_CHECK_EQUAL(SArray.getEntry(2), "better");
+    }
+}
+
