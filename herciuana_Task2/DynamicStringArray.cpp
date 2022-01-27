@@ -17,33 +17,32 @@ void DynamicStringArray::addEntry(const string &String)
         Array[i] = dynamicArray[i];
     }
     Array[size] = String;
-    size++;
-    delete[] dynamicArray;
+    // delete[] dynamicArray;
     dynamicArray = Array;
+    size++;
 }
 
 bool DynamicStringArray::deleteEntry(const string &String)
 {
     bool r = false;
-    int i;
     for (int i = 0; i < size; i++)
     {
         if (dynamicArray[i] == String)
         {
-            r = true;
+            for (int j = i; j < size - 1; j++)
+            {
+                dynamicArray[j] = dynamicArray[j + 1];
+            }
+            size--;
+            return true;
         }
     }
-    if (r == true)
-    {
-        return r;
-    }
-    else
-        return false;
+    return false;
 }
 
 string DynamicStringArray::getEntry(const int index) const
 {
-    if ((index < 0) || (index >= size))
+    if (index >= size)
     {
         return " ";
     }
@@ -59,28 +58,23 @@ DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
     dynamicArray = new string[size];
     for (int i = 0; i < size; i++)
     {
-        dynamicArray[i] = obj.dynamicArray[i];
+        dynamicArray[i] = obj.getEntry(i);
     }
 }
 
 DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
 {
-    if (this != &obj)
+    if (&obj != this)
     {
         delete[] dynamicArray;
+        size = obj.size;
         dynamicArray = new string[size];
-        size = obj.get_Size();
-        for (int i = 0; i < size; i++)
-        {
-            dynamicArray[i] = obj.dynamicArray[i];
-        }
     }
     return *this;
 }
-DynamicStringArray::DynamicStringArray(DynamicStringArray &&obj)
+DynamicStringArray::DynamicStringArray(DynamicStringArray &&obj) : size(obj.size), dynamicArray(obj.dynamicArray)
 {
-    dynamicArray = obj.dynamicArray;
-    size = obj.get_Size();
+
     obj.dynamicArray = nullptr;
     obj.size = 0;
 }
@@ -91,7 +85,7 @@ DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&obj)
     {
         delete[] dynamicArray;
         dynamicArray = obj.dynamicArray;
-        size = obj.get_Size();
+        size = obj.size;
         obj.dynamicArray = nullptr;
         obj.size = 0;
     }
@@ -106,5 +100,7 @@ DynamicStringArray::DynamicStringArray(const vector<string> &obj) : DynamicStrin
 }
 DynamicStringArray::~DynamicStringArray()
 {
-    delete[] dynamicArray;
+    {
+        delete[] dynamicArray;
+    }
 }
