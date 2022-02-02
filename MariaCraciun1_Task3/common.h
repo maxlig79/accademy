@@ -25,7 +25,7 @@ const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
 
 const std::string SHARED_MEMORY_NAME("academy_ipc_task_sm");
 
-constexpr size_t SHARED_MEMORY_SIZE = 2048;
+constexpr size_t SHARED_MEMORY_SIZE = 1024;
 
 constexpr int MAX_MESSAGE_NUMBER = 100;
 
