@@ -1,11 +1,18 @@
 #pragma once
 
+#include <boost/interprocess/ipc/message_queue.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/asio.hpp>
+#include <iostream>
 #include <stddef.h>
 #include <vector>
 #include <string>
 #include <utility>
 #include <boost/algorithm/string.hpp>
 #include <map>
+#include "DynamicStringArray.hpp"
+
+using namespace boost::interprocess;
 
 constexpr size_t MAX_COMMAND_LENGTH = 100;
 
@@ -18,7 +25,7 @@ const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
 
 const std::string SHARED_MEMORY_NAME("academy_ipc_task_sm");
 
-constexpr size_t SHARED_MEMORY_SIZE = 1024;
+constexpr size_t SHARED_MEMORY_SIZE = 2048;
 
 constexpr int MAX_MESSAGE_NUMBER = 100;
 
