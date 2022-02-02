@@ -1,0 +1,8 @@
+from SCons.Environment import Environment
+
+env = Environment()   # Create an environmnet
+env.Append(CCFLAGS = ['-g'])
+env.Append(LIBS=['librt', 'pthread'])
+env.Append(CPPPATH=['include'])
+env.Program(target = "server", source = ["src/server.cpp", "src/DynamicStringArray.cpp", "src/common.cpp"], LIBS= ["librt", "pthread"])
+env.Program(target = "client", source = ["src/client.cpp", "src/common.cpp"], LIBS= ["librt", "pthread"])
