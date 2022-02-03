@@ -51,16 +51,11 @@ bool DynamicStringArray::deleteEntry(const string &newString)
 
     return found;
 }
-string DynamicStringArray::getEntry(const int index) const
+std::string *DynamicStringArray::getEntry(const int index)
 {
-    if (index >= size)
-    {
-        return "";
-    }
-    else
-    {
-        return dynamicArray[index];
-    }
+    if ((dynamicArray != nullptr) && (index >= 0 && index < size))
+        return &dynamicArray[index];
+    return nullptr;
 }
 DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
 {
@@ -68,7 +63,7 @@ DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
     dynamicArray = new string[size];
     for (int i = 0; i < size; i++)
     {
-        dynamicArray[i] = obj.getEntry(i);
+        dynamicArray[i] = obj.dynamicArray[i];
     }
 }
 DynamicStringArray::~DynamicStringArray()

@@ -15,7 +15,7 @@ public:
     int getSize() const;
     void addEntry(const string &newString);
     bool deleteEntry(const string &newString);
-    string getEntry(const int index) const;
+    std::string *getEntry ( const int index );
     DynamicStringArray(const DynamicStringArray &obj);
     DynamicStringArray& operator=(const DynamicStringArray &obj); 
     ~DynamicStringArray();
