@@ -1,19 +1,22 @@
 #include <iostream>
 #include <ClientProxyObject.hpp>
+#include <Common.hpp>
+#include <thread>
+
+using namespace common;
 
 int main()
 {
-    printf("GET=%d\n", common::GET);
-    ClientProxyObject obj;
+    client::ClientProxyObject obj;
     int code = 0;
     do
     {
         obj.printHelp();
         std::cout << "Enter: ";
         std::cin >> code;
-        //Could not use switch because extern constants must be known at compile-time
-        //Have to use extern constants because of conflicting declarations
-        if (code == common::GET)
+        switch (code)
+        {
+        case GET:
         {
             int i;
             std::cout << "Enter index: ";
@@ -30,23 +33,8 @@ int main()
                 std::cout << "Could not get string" << std::endl;
             }
         }
-        if (code == common::ADD)
-        {
-            std::string str;
-            std::cout << "Enter string: ";
-            std::cin.get();
-            std::getline(std::cin, str);
-            bool res = obj.addString(str);
-            if (res)
-            {
-                std::cout << "String added successfully" << std::endl;
-            }
-            else
-            {
-                std::cout << "Could not add string" << std::endl;
-            }
-        }
-        if (code == common::DELETE)
+        break;
+        case DELETE:
         {
             std::string str;
             std::cout << "Enter string: ";
@@ -62,9 +50,29 @@ int main()
                 std::cout << "Could not delete string" << std::endl;
             }
         }
-        if (code == common::EXIT)
+        break;
+        case ADD:
+        {
+            std::string str;
+            std::cout << "Enter string: ";
+            std::cin.get();
+            std::getline(std::cin, str);
+            bool res = obj.addString(str);
+            if (res)
+            {
+                std::cout << "String added successfully" << std::endl;
+            }
+            else
+            {
+                std::cout << "Could not add string" << std::endl;
+            }
+        }
+        break;
+        case EXIT:
         {
             obj.exit();
+        }
+        break;
         }
 
     } while (code != common::EXIT);

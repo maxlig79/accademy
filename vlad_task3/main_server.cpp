@@ -7,7 +7,9 @@
 #include <boost/format.hpp>
 #include <Common.hpp>
 #include <DynamicArray.hpp>
+
 using namespace common;
+
 DynamicArray arr;
 std::string getShmString(boost::interprocess::managed_shared_memory &shm, std::string name)
 {
@@ -22,14 +24,11 @@ void setResult(boost::interprocess::managed_shared_memory &shm, int result)
 }
 int main()
 {
-    printf("EXIT=%d", EXIT);
-    std::cout << "Removing previous shared objects..." << std::endl;
     boost::interprocess::named_condition::remove(_COND.c_str());
     boost::interprocess::message_queue::remove(_MQ.c_str());
     boost::interprocess::shared_memory_object::remove(_SHM.c_str());
     boost::interprocess::named_mutex::remove(_MUTEX.c_str());
 
-    std::cout << "Creating new shared objects..." << std::endl;
     boost::interprocess::named_mutex mutex(boost::interprocess::create_only, _MUTEX.c_str());
     boost::interprocess::message_queue mq(boost::interprocess::create_only, _MQ.c_str(), 10, sizeof(int));
     boost::interprocess::managed_shared_memory shm(boost::interprocess::create_only, _SHM.c_str(), 1024);
@@ -40,7 +39,6 @@ int main()
     while (true)
     {
         mq.receive(&command, sizeof(int), recvd, priority);
-
         //Same reason as in main_client.cpp
         switch (command)
         {
@@ -48,15 +46,19 @@ int main()
         {
             exit(0);
         }
+        break;
         case ADD:
         {
+            std::cout << "Received add" << std::endl;
             {
                 boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
                 arr.addEntry(getShmString(shm, VALUE));
                 setResult(shm, SUCCESS);
             }
-            cond.notify_one();
+            std::cout << "notify..." << std::endl;
+            cond.notify_all();
         }
+        break;
         case DELETE:
         {
             {
@@ -65,8 +67,9 @@ int main()
                 bool success = arr.deleteEntry(str);
                 setResult(shm, success ? SUCCESS : ERROR);
             }
-            cond.notify_one();
+            cond.notify_all();
         }
+        break;
         case HELP:
         {
             {
@@ -76,10 +79,12 @@ int main()
                 ShmString *shm_str = shm.find_or_construct<ShmString>(VALUE.c_str())(help.c_str(), shm.get_segment_manager());
                 *shm_str = help.c_str();
             }
-            cond.notify_one();
+            cond.notify_all();
         }
+        break;
         case GET:
         {
+            std::cout << "Received get" << std::endl;
             {
                 boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
                 std::pair<int *, unsigned long> p = shm.find<int>(INDEX.c_str());
@@ -97,63 +102,9 @@ int main()
                     setResult(shm, ERROR);
                 }
             }
-            cond.notify_one();
+            std::cout << "notify..." << std::endl;
+            cond.notify_all();
         }
         }
-        if (command == EXIT)
-        {
-            exit(0);
         }
-        if (command == ADD)
-        {
-            {
-                boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
-                arr.addEntry(getShmString(shm, VALUE));
-                setResult(shm, SUCCESS);
-            }
-            cond.notify_one();
-        }
-        if (command == DELETE)
-        {
-            {
-                boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
-                std::string str = getShmString(shm, VALUE);
-                bool success = arr.deleteEntry(str);
-                setResult(shm, success ? SUCCESS : ERROR);
-            }
-            cond.notify_one();
-        }
-        if (command == HELP)
-        {
-            {
-                boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
-                boost::format fmt("%d - exit\n%d - get(int)\n%d - add(str)\n%d - delete(str)\n");
-                std::string help = (fmt % EXIT % GET % ADD % DELETE).str();
-                ShmString *shm_str = shm.find_or_construct<ShmString>(VALUE.c_str())(help.c_str(), shm.get_segment_manager());
-                *shm_str = help.c_str();
-            }
-            cond.notify_one();
-        }
-        if (command == GET)
-        {
-            {
-                boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(mutex);
-                std::pair<int *, unsigned long> p = shm.find<int>(INDEX.c_str());
-                int *idx = p.first;
-                int i = *idx;
-                try
-                {
-                    std::string str = arr.getEntry(i);
-                    ShmString *shm_str = shm.find_or_construct<ShmString>(VALUE.c_str())(str.c_str(), shm.get_segment_manager());
-                    *shm_str = str.c_str();
-                    setResult(shm, SUCCESS);
-                }
-                catch (std::exception &e)
-                {
-                    setResult(shm, ERROR);
-                }
-            }
-            cond.notify_one();
-        }
-    }
 }

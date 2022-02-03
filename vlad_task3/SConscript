@@ -10,7 +10,7 @@ if test:
 else: """
 env = Environment()
 
-env.Append(CXXFLAGS=["-std=c++17"], CPPPATH=["include"], LIBS=["rt", "pthread"])
+env.Append(CXXFLAGS=["-std=c++17", "-g"], CPPPATH=["include"], LIBS=["rt", "pthread"])
 """ target_sources = Glob("src/*.cpp") """
 
 """ lib = env.Library("ipc", target_sources) """
@@ -27,7 +27,8 @@ if test:
  """
 #common_lib = env.Library("common", ["src/Common.cpp"])
 env.Program("practice", ["practice.cpp"])
+proxy_base_lib = env.Library("proxy_base",["src/ProxyBase.cpp"])
 #dynamic_array_lib = env.Library("dynamic_array", ["src/DynamicArray.cpp"])
 env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp"])
 #client_lib = env.Library("client", ["src/ClientProxyObject.cpp"])
-env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"])
+env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
