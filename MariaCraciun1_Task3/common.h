@@ -2,17 +2,25 @@
 
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/asio.hpp>
 #include <iostream>
+#include <cstring>
 #include <stddef.h>
 #include <vector>
 #include <string>
 #include <utility>
+#include <memory>
 #include <boost/algorithm/string.hpp>
 #include <map>
 #include "DynamicStringArray.hpp"
 
 using namespace boost::interprocess;
+
+typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
+typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> MyStringAllocator;
+typedef boost::interprocess::allocator<MyStringAllocator, managed_shared_memory::segment_manager()> StringAllocator;
 
 constexpr size_t MAX_COMMAND_LENGTH = 100;
 
@@ -20,6 +28,10 @@ struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
 };
+
+const std::string MUTEX_IPC("academy_ipc_task_Mutex");
+
+const std::string CONDITION_IPC("academy_ipc_task_Condition");
 
 const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
 
@@ -67,7 +79,6 @@ const std::map<const std::string, const CommandIds> COMMAND_TO_ID{
 };
 
 using CommandPair = std::pair<CommandIds, std::string>;
-
 const CommandPair split_command(const std::string &command)
 {
     // BONUS TASK: Make this function (much) better!
