@@ -8,8 +8,8 @@ class Client
   void start() 
   {
 
-    message_queue msgQ (open_only, MESSAGE_QUEUE_NAME.c_str(),MAX_MESSAGE_NUMBER, MAX_MESSAGE_SIZE );
-    managed_shared_memory msgShm (open_only,SHARED_MEMORY_NAME.c_str(), SHARED_MEMORY_SIZE );
+    message_queue msgQ (open_only, MESSAGE_QUEUE_NAME.c_str() );
+    managed_shared_memory msgShm (open_only,SHARED_MEMORY_NAME.c_str() );
 
     MessageQueueRequest msgCmd;
 
@@ -18,7 +18,7 @@ class Client
 
     while ((strcmp(msgCmd.command, "exit") != 0))
   {
-    std::cout<<"Add command:"<<std::endl;
+    std::cout<<"Insert command:"<<std::endl;
     std::cin >> msgCmd.command;
     
     msgQ.send (&msgCmd, MAX_MESSAGE_SIZE, 0);
@@ -38,28 +38,28 @@ class Client
 
         case CommandIds::ADD:
         {
-          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>("ADD");
-          std::cout << p.first << std::endl;
+          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>(ADD_COMMAND.c_str() );
+          std::cout << p.first->c_str() << std::endl;
 
-          msgShm.destroy <MyStringAllocator> ("ADD");
+          msgShm.destroy <MyStringAllocator> (ADD_COMMAND.c_str());
         break;
         }
         
         case CommandIds::DELETE:
         {
-          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>("DELETE");
-          std::cout << p.first << std::endl;
+          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>(DELETE_COMMAND.c_str() );
+          std::cout << p.first->c_str() << std::endl;
 
-          msgShm.destroy <MyStringAllocator> ("DELETE");
+          msgShm.destroy <MyStringAllocator> (DELETE_COMMAND.c_str());
         break;
         }
         
         case CommandIds::GET:
         {
-          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>("GET");
-          std::cout << p.first << std::endl;
+          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>(GET_COMMAND.c_str() );
+          std::cout << p.first->c_str() << std::endl;
 
-          msgShm.destroy <MyStringAllocator> ("GET");
+          msgShm.destroy <MyStringAllocator> (GET_COMMAND.c_str() );
         break;
         }
 

@@ -2,9 +2,6 @@
 
 class Server 
 {
-  private:
-    DynamicStringArray stringArray;
-
   public:
   Server() 
   {
@@ -18,6 +15,7 @@ class Server
    message_queue msgQ (open_or_create, MESSAGE_QUEUE_NAME.c_str(),MAX_MESSAGE_NUMBER, MAX_MESSAGE_SIZE );
    managed_shared_memory msgShm (open_or_create,SHARED_MEMORY_NAME.c_str(), SHARED_MEMORY_SIZE );
 
+   DynamicStringArray stringArray;
    MessageQueueRequest msgCmd;
    message_queue::size_type recvd_size;
    unsigned int priority;
@@ -44,7 +42,7 @@ class Server
         case CommandIds::ADD:
         {
           stringArray.addEntry(commandPair.second);
-          msgShm.find_or_construct<MyStringAllocator>("ADD")("Add ok",msgShm.get_segment_manager() );
+          msgShm.find_or_construct<MyStringAllocator>(ADD_COMMAND.c_str())("Add ok",msgShm.get_segment_manager() );
         break;
         }
         
@@ -52,9 +50,9 @@ class Server
         {
           if(stringArray.deleteEntry(commandPair.second))
           {
-          msgShm.construct<MyStringAllocator>("DELETE")("Delete ok",msgShm.get_segment_manager() );
+          msgShm.construct<MyStringAllocator>(DELETE_COMMAND.c_str())("Delete ok",msgShm.get_segment_manager() );
           } else {
-              msgShm.construct<MyStringAllocator>("DELETE")("Delete not ok",msgShm.get_segment_manager() );
+              msgShm.construct<MyStringAllocator>(DELETE_COMMAND.c_str())("Delete not ok",msgShm.get_segment_manager() );
           }
         break;
         }
@@ -63,9 +61,9 @@ class Server
         {
           if(stringArray.getEntry(std::stoi(commandPair.second)))
           {
-          msgShm.construct<MyStringAllocator>("GET")((*stringArray.getEntry(std::stoi(commandPair.second))).c_str(),msgShm.get_segment_manager() );
+          msgShm.construct<MyStringAllocator>(GET_COMMAND.c_str())((*stringArray.getEntry(std::stoi(commandPair.second))).c_str(),msgShm.get_segment_manager() );
           } else {
-              msgShm.construct<MyStringAllocator>("GET")("Element not found",msgShm.get_segment_manager() );
+              msgShm.construct<MyStringAllocator>(GET_COMMAND.c_str())("Element not found",msgShm.get_segment_manager() );
           }
         break;
         }
