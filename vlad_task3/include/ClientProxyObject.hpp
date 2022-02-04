@@ -17,7 +17,9 @@ namespace client
     {
     private:
         std::mutex thread_mutex;
+
     public:
+        ClientProxyObject();
         bool addString(const std::string &str);
         bool deleteString(const std::string &str);
         std::string get(int index, bool &has_string);

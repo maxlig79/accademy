@@ -29,6 +29,6 @@ if test:
 env.Program("practice", ["practice.cpp"])
 proxy_base_lib = env.Library("proxy_base",["src/ProxyBase.cpp"])
 #dynamic_array_lib = env.Library("dynamic_array", ["src/DynamicArray.cpp"])
-env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp"])
+env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp", "src/ServerProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
 #client_lib = env.Library("client", ["src/ClientProxyObject.cpp"])
 env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
