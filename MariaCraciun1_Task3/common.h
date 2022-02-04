@@ -8,10 +8,9 @@
 #include <iostream>
 #include <cstring>
 #include <stddef.h>
-#include <vector>
 #include <string>
+#include <vector>
 #include <utility>
-#include <memory>
 #include <boost/algorithm/string.hpp>
 #include <map>
 #include "DynamicStringArray.hpp"
@@ -20,7 +19,6 @@ using namespace boost::interprocess;
 
 typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
 typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> MyStringAllocator;
-typedef boost::interprocess::allocator<MyStringAllocator, managed_shared_memory::segment_manager()> StringAllocator;
 
 constexpr size_t MAX_COMMAND_LENGTH = 100;
 

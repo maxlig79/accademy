@@ -5,4 +5,4 @@ env.Append(CCFLAGS = ['-g'])
 env.Append(LIBS=['librt', 'pthread'])
 
 env.Program(target = "server", source = ["server.cpp", "DynamicStringArray.cpp"], LIBS= ["librt", "pthread"])
-env.Program(target = "client", source = ["client.cpp", "DynamicStringArray.o"], LIBS= ["librt", "pthread"])
+env.Program(target = "client", source = ["client.cpp"], LIBS= ["librt", "pthread"])

@@ -64,17 +64,20 @@ bool DynamicStringArray::deleteEntry (const std::string &str) {
         size-- ;
         status = true ;
     }
-    std::string *tempArray = new std::string[size-1] ;
-    int j=0 ;
-    for ( int i = 0; i < size; i++ ) {
-        if ( dynamicArray[i] != str )
-            tempArray[j] = dynamicArray[i] ;
-        j++ ;
-    }
-    delete[] dynamicArray ;
-    dynamicArray = tempArray ;
-    size-- ;
-
+    if(status==false && size > 1)
+    {
+        std::string *tempArray = new std::string[size-1] ;
+        int j=0 ;
+        for ( int i = 0; i < size; i++ ) {
+            if ( dynamicArray[i] != str )
+                tempArray[j] = dynamicArray[i] ;
+            j++ ;
+         }
+        delete[] dynamicArray ;
+        dynamicArray = tempArray ;
+        size-- ;
+        status=true;
+   }
     return status ;
 }
 
