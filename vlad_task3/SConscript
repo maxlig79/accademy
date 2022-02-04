@@ -1,34 +1,5 @@
-from subprocess import check_output
-
-#If test is enabled, make the test executable and the library with test flags
-#otherwise just build the library without the test flags
-
-""" test = ARGUMENTS.get("test", 0)
-test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g"])
-if test:
-    env = test_env.Clone()
-else: """
 env = Environment()
-
 env.Append(CXXFLAGS=["-std=c++17", "-g"], CPPPATH=["include"], LIBS=["rt", "pthread"])
-""" target_sources = Glob("src/*.cpp") """
-
-""" lib = env.Library("ipc", target_sources) """
-
-""" if test:
-    test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
-    test_lib = File(test_lib.decode())
-    test_sources = Glob("test/*.cpp")
-    env.Program("test_arr", test_sources, LIBS=[test_lib, lib, "gcov"])
- """
-""" main_libs = [lib]
-if test:
-    main_libs.append("gcov")
- """
-#common_lib = env.Library("common", ["src/Common.cpp"])
-env.Program("practice", ["practice.cpp"])
 proxy_base_lib = env.Library("proxy_base",["src/ProxyBase.cpp"])
-#dynamic_array_lib = env.Library("dynamic_array", ["src/DynamicArray.cpp"])
 env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp", "src/ServerProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
-#client_lib = env.Library("client", ["src/ClientProxyObject.cpp"])
 env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])

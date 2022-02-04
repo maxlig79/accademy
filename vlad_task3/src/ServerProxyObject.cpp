@@ -33,7 +33,6 @@ namespace server
                     arr->addEntry(getValue());
                     setStatus(SUCCESS);
                 }
-                cond->notify_all();
             }
             break;
             case DELETE:
@@ -44,7 +43,6 @@ namespace server
                     bool success = arr->deleteEntry(str);
                     setStatus(success ? SUCCESS : ERROR);
                 }
-                cond->notify_all();
             }
             break;
             case HELP:
@@ -55,7 +53,6 @@ namespace server
                     std::string help = (fmt % ADD % DELETE % GET % EXIT).str();
                     setValue(help);
                 }
-                cond->notify_all();
             }
             break;
             case GET:
@@ -73,9 +70,14 @@ namespace server
                         setStatus(ERROR);
                     }
                 }
-                cond->notify_all();
+            }
+            default:
+            {
+                setValue("Wrong command");
+                setStatus(ERROR);
             }
             }
+            cond->notify_all();
         }
     }
 }
