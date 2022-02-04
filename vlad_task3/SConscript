@@ -1,0 +1,5 @@
+env = Environment()
+env.Append(CXXFLAGS=["-std=c++17", "-g"], CPPPATH=["include"], LIBS=["rt", "pthread"])
+proxy_base_lib = env.Library("proxy_base",["src/ProxyBase.cpp"])
+env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp", "src/ServerProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
+env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
