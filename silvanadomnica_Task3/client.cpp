@@ -28,13 +28,13 @@ int main()
       {
       case CommandIds::HELP:
       {
-        std::pair<SharedStringIpc *, size_t> p = managedSm.find<SharedStringIpc>(HELP_COMMAND.c_str());
-        cout << p.first->c_str() << std::endl;
-        for (auto i = COMMAND_TO_HELP.begin(); i != COMMAND_TO_HELP.end(); ++i)
+        std::pair<SharedStringVector *, size_t> vec = managedSm.find<SharedStringVector>(HELP_COMMAND.c_str());
+
+        for (int i = 0; i < vec.first->size(); i = i + 2)
         {
-          cout << i->first << ": " << i->second << endl;
+          cout << vec.first->at(i) << " " << vec.first->at(i + 1) << std::endl;
         }
-        managedSm.destroy<SharedStringIpc>(HELP_COMMAND.c_str());
+        managedSm.destroy<SharedStringVector>(HELP_COMMAND.c_str());
         break;
       }
       case CommandIds::EXIT:

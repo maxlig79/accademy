@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stddef.h>
-#include <vector>
 #include <string>
 #include <utility>
 #include <boost/algorithm/string.hpp>
@@ -15,7 +14,6 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <thread>
-#include "DynamicStringArray.hpp"
 
 using std::cin;
 using std::cout;
@@ -24,10 +22,10 @@ using namespace boost::interprocess;
 
 constexpr size_t MAX_COMMAND_LENGTH = 100;
 
-typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
-typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> SharedStringIpc;
-//typedef boost::interprocess::allocator<SharedStringIpc, managed_shared_memory::segment_manager> StringAllocator;
-//typedef boost::interprocess::vector<SharedStringIpc, StringAllocator> SharedStringVector;
+typedef allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
+typedef basic_string<char, std::char_traits<char>, CharAllocator> SharedStringIpc;
+typedef allocator<SharedStringIpc, managed_shared_memory::segment_manager> StringAllocator;
+typedef vector<SharedStringIpc, StringAllocator> SharedStringVector;
 
 struct MessageQueueRequest
 {
@@ -42,7 +40,7 @@ const std::string MUTEX_IPC_NAME("academy_ipc_task_mutex");
 
 const std::string CONDITION_IPC_NAME("academy_ipc_task_condition");
 
-constexpr size_t SHARED_MEMORY_SIZE = 1024;
+constexpr size_t SHARED_MEMORY_SIZE = 10*1024;
 
 constexpr int MAX_MESSAGE_NUMBER = 100;
 

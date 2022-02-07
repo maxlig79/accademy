@@ -1,4 +1,5 @@
 #include "common.h"
+#include "DynamicStringArray.hpp"
 
 int main()
 {
@@ -31,7 +32,13 @@ int main()
       {
       case CommandIds::HELP:
       {
-        managedSm.find_or_construct<SharedStringIpc>(HELP_COMMAND.c_str())("Commands and their usages:", managedSm.get_segment_manager());
+        SharedStringVector *vec = managedSm.find_or_construct<SharedStringVector>(HELP_COMMAND.c_str())(managedSm.get_allocator<StringAllocator>());
+
+        for (auto &cmd : COMMAND_TO_HELP)
+        {
+          vec->push_back(SharedStringIpc(cmd.first.begin(), cmd.first.end(), managedSm.get_segment_manager()));
+          vec->push_back(SharedStringIpc(cmd.second.begin(), cmd.second.end(), managedSm.get_segment_manager()));
+        }
         break;
       }
       case CommandIds::EXIT:

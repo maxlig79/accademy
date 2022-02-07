@@ -7,9 +7,9 @@ int DynamicStringArray::getSize() const
 {
     return size;
 }
-void DynamicStringArray::addEntry(const string &newString)
+void DynamicStringArray::addEntry(const std::string &newString)
 {
-    string *newArray = new string[size + 1];
+    std::string *newArray = new std::string[size + 1];
     for (int i = 0; i < size; i++)
     {
         newArray[i] = dynamicArray[i];
@@ -19,7 +19,7 @@ void DynamicStringArray::addEntry(const string &newString)
     dynamicArray = newArray;
     size++;
 }
-bool DynamicStringArray::deleteEntry(const string &newString)
+bool DynamicStringArray::deleteEntry(const std::string &newString)
 {
     bool found = false;
     int i;
@@ -60,7 +60,7 @@ std::string *DynamicStringArray::getEntry(const int index)
 DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
 {
     size = obj.getSize();
-    dynamicArray = new string[size];
+    dynamicArray = new std::string[size];
     for (int i = 0; i < size; i++)
     {
         dynamicArray[i] = obj.dynamicArray[i];
@@ -76,7 +76,7 @@ DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
     {
         delete[] dynamicArray;
         size = obj.size;
-        dynamicArray = new string[size];
+        dynamicArray = new std::string[size];
         for (int i = 0; i < size; i++)
         {
             dynamicArray[i] = obj.dynamicArray[i];
@@ -101,7 +101,7 @@ DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&other)
     }
     return *this;
 }
-DynamicStringArray::DynamicStringArray(const vector<string> &obj) : DynamicStringArray()
+DynamicStringArray::DynamicStringArray(const std::vector<std::string> &obj) : DynamicStringArray()
 {
     for (auto i : obj)
     {
