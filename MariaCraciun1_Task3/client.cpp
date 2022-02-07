@@ -23,22 +23,20 @@ class Client
       msgQ.send (&msgCmd, MAX_MESSAGE_SIZE, 0);
       CommandPair commandPair = split_command (msgCmd.command);
 
-      scoped_lock<interprocess_mutex> lock (*mutex);
+      scoped_lock <interprocess_mutex> lock (*mutex);
       condition->wait (lock);
 
       switch (commandPair.first)
       {
         case CommandIds::HELP:
         {
-          std::pair<MyStringAllocator*, size_t> p = msgShm.find<MyStringAllocator>(HELP_COMMAND.c_str());
-          if(p.first)
+          std::pair <MyVectorAllocator*, size_t> myVectorPair = msgShm.find <MyVectorAllocator> (HELP_COMMAND.c_str());
+          
+          for (int i=0; i< myVectorPair.first->size(); i+=2)
           {
-            std::cout << p.first->c_str() << std::endl;
-            for (auto itr=COMMAND_TO_HELP.begin(); itr != COMMAND_TO_HELP.end(); ++itr)
-             std::cout << itr->first<< ": "<< itr->second << std::endl;
-            std::cout<<std::endl;
+            std::cout << myVectorPair.first->at(i) << ": "<< myVectorPair.first->at(i+1) << std::endl;
           }
-          msgShm.destroy <MyStringAllocator> (HELP_COMMAND.c_str());
+          msgShm.destroy <MyVectorAllocator> (HELP_COMMAND.c_str());
         break;
         }
 
