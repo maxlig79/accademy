@@ -48,7 +48,9 @@ namespace client
         int code = GET;
         mq->send(&code, sizeof(int), 0);
         cond->wait(lk);
-        has_string = getStatus() == SUCCESS;
+        Status status = getStatus();
+        std::cout << "status is " << status << std::endl;
+        has_string = (getStatus() == SUCCESS);
         if (!has_string)
         {
             return "";
