@@ -33,8 +33,13 @@ class Server
       {
         case CommandIds::HELP:
         {
-          msgShm.find_or_construct <MyStringAllocator> (HELP_COMMAND.c_str()) 
-          ("Instructions:", msgShm.get_segment_manager());
+          MyVectorAllocator *myVector = msgShm.find_or_construct <MyVectorAllocator> (HELP_COMMAND.c_str()) 
+          (msgShm.get_allocator<StringAllocator>());
+          for ( auto &itr : COMMAND_TO_HELP)
+          {
+            myVector->push_back(MyStringAllocator(itr.first.begin(), itr.first.end(), msgShm.get_segment_manager()));
+            myVector->push_back(MyStringAllocator(itr.second.begin(), itr.second.end(), msgShm.get_segment_manager()));
+          }
         break;
         }
 
@@ -81,7 +86,7 @@ class Server
 
         default: { break; }
       }
-      condition->notify_all();
+      condition->notify_one();
    }
   }
 

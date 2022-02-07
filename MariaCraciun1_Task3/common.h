@@ -3,6 +3,7 @@
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/containers/vector.hpp>
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/asio.hpp>
 #include <iostream>
@@ -17,8 +18,10 @@
 
 using namespace boost::interprocess;
 
-typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
-typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> MyStringAllocator;
+typedef allocator <char, managed_shared_memory::segment_manager> CharAllocator;
+typedef basic_string <char, std::char_traits<char>, CharAllocator> MyStringAllocator;
+typedef allocator <MyStringAllocator, managed_shared_memory::segment_manager> StringAllocator;
+typedef vector <MyStringAllocator, StringAllocator> MyVectorAllocator;
 
 constexpr size_t MAX_COMMAND_LENGTH = 100;
 
@@ -35,7 +38,7 @@ const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
 
 const std::string SHARED_MEMORY_NAME("academy_ipc_task_sm");
 
-constexpr size_t SHARED_MEMORY_SIZE = 1024;
+constexpr size_t SHARED_MEMORY_SIZE = 2048;
 
 constexpr int MAX_MESSAGE_NUMBER = 100;
 
