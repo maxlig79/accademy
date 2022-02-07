@@ -2,6 +2,7 @@
 #include <ServerProxyObject.hpp>
 #include <boost/format.hpp>
 #include <Common.hpp>
+#include <iostream>
 
 using namespace common;
 
@@ -71,6 +72,7 @@ namespace server
                     }
                 }
             }
+            break;
             default:
             {
                 setValue("Wrong command");
