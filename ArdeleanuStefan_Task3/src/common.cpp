@@ -42,17 +42,19 @@ void start(std::unique_ptr<Server_Client_Base> base)
     boost::interprocess::message_queue::size_type recvd_size;
     auto IPC_mutex = base->getSharedMemory()->find_or_construct<boost::interprocess::interprocess_mutex>(IPC_MUTEX.c_str())();
     auto IPC_cond_var = base->getSharedMemory()->find_or_construct<boost::interprocess::interprocess_condition>(IPC_CONDITIONAL_VAR.c_str())();
-
-    while ((strcmp(msg.command, EXIT_COMMAND.c_str()) != 0))
+    do
     {
         if (ptypeinfo == typeid(Client))
         {
             std::cin >> msg.command;
+            msg.ID_Client = getpid();
             base->getMessageQueue()->send(&msg, sizeof(msg), 0);
         }
         if (ptypeinfo == typeid(Server))
         {
             base->getMessageQueue()->receive(&msg, sizeof(msg), recvd_size, priority);
+
+            base->createClientArray(msg.ID_Client);
         }
         CommandPair command_pair = split_command(msg.command);
         boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> lock(*IPC_mutex);
@@ -94,7 +96,8 @@ void start(std::unique_ptr<Server_Client_Base> base)
         {
             boost::interprocess::message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
             boost::interprocess::shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
-
+            if (ptypeinfo == typeid(Server))
+                base->exitClient();
             break;
         }
 
@@ -108,7 +111,7 @@ void start(std::unique_ptr<Server_Client_Base> base)
             }
             else if (ptypeinfo == typeid(Server))
             {
-                base->setStringArrayEntry(command_pair.second);
+                base->setStringArrayEntry(msg.ID_Client, command_pair.second);
                 base->getSharedMemory()->find_or_construct<Shared::String>(ADD_COMMAND.c_str())("Add OK", base->getSharedMemory()->get_segment_manager());
             }
             break;
@@ -125,7 +128,7 @@ void start(std::unique_ptr<Server_Client_Base> base)
             }
             else if (ptypeinfo == typeid(Server))
             {
-                if (base->deleteStringArray(command_pair.second))
+                if (base->deleteStringArray(msg.ID_Client, command_pair.second))
                 {
                     base->getSharedMemory()->construct<Shared::String>(DELETE_COMMAND.c_str())("DELETE OK", base->getSharedMemory()->get_segment_manager());
                 }
@@ -148,9 +151,9 @@ void start(std::unique_ptr<Server_Client_Base> base)
             }
             else if (ptypeinfo == typeid(Server))
             {
-                if (base->getStringArrayEntry(std::stoi(command_pair.second)))
+                if (base->getStringArrayEntry(msg.ID_Client, std::stoi(command_pair.second)))
                 {
-                    base->getSharedMemory()->construct<Shared::String>(GET_COMMAND.c_str())((*base->getStringArrayEntry(std::stoi(command_pair.second))).c_str(), base->getSharedMemory()->get_segment_manager());
+                    base->getSharedMemory()->construct<Shared::String>(GET_COMMAND.c_str())((*base->getStringArrayEntry(msg.ID_Client, std::stoi(command_pair.second))).c_str(), base->getSharedMemory()->get_segment_manager());
                 }
                 else
                 {
@@ -166,6 +169,15 @@ void start(std::unique_ptr<Server_Client_Base> base)
         }
         }
         if (ptypeinfo == typeid(Server))
+        {
             IPC_cond_var->notify_one();
-    }
+        }
+    } while ([&]() -> bool
+             {
+                 if (ptypeinfo == typeid(Server))
+                 {
+                     return !((strcmp(msg.command, EXIT_COMMAND.c_str()) == 0) &&(base->getNumberOfClients() == 0));
+                 }
+                 else
+                    return (strcmp(msg.command, EXIT_COMMAND.c_str()) != 0); }());
 }
