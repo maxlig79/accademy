@@ -2,21 +2,27 @@
 #include <common.h>
 #include <DynamicStringArray.hpp>
 
+
 class Server_Client_Base
 {
 public:
     virtual boost::interprocess::managed_shared_memory *getSharedMemory() = 0;
     virtual boost::interprocess::message_queue *getMessageQueue() = 0;
-    virtual bool deleteStringArray(std::string input) {return false;}
-    virtual std::string *getStringArrayEntry(int index) { return nullptr; }
-    virtual void setStringArrayEntry(std::string input){}
+    virtual bool deleteStringArray(int clientId, std::string input) { return false; }
+    virtual std::string *getStringArrayEntry(int clientId, int index) { return nullptr; }
+    virtual void setStringArrayEntry(int clientId, std::string input) {}
+    virtual void createClientArray(int clientId) {}
+    virtual std::map<int, std::shared_ptr<DynamicStringArray>> getClientArray() { return {}; }
+    virtual void exitClient(){}
+    virtual int getNumberOfClients() {return 0;}
     virtual ~Server_Client_Base() {}
 };
 
 class Server : public Server_Client_Base
 {
 private:
-    DynamicStringArray m_string_array;
+    int m_number_of_clients = 0;
+    std::map<int, std::shared_ptr<DynamicStringArray>> m_ClientArray;
     std::unique_ptr<boost::interprocess::message_queue> m_mq;
     std::unique_ptr<boost::interprocess::managed_shared_memory> m_managed_smh;
 
@@ -39,23 +45,40 @@ public:
         return m_mq.get();
     }
 
-    DynamicStringArray getDynamicStringArray()
+    std::map<int, std::shared_ptr<DynamicStringArray>> getClientArray()
     {
-        return m_string_array;
+        return m_ClientArray;
     }
 
-    void setStringArrayEntry(std::string input)
+    void setStringArrayEntry(int clientId, std::string input)
     {
-        m_string_array.addEntry(input);
+        m_ClientArray[clientId]->addEntry(input);
     }
 
-    std::string *getStringArrayEntry(int index)
+    std::string *getStringArrayEntry(int clientId, int index)
     {
-        return m_string_array.getEntry(index);
+        return m_ClientArray[clientId]->getEntry(index);
     }
 
-    bool deleteStringArray(std::string input){
-       return m_string_array.deleteEntry(input);
+    bool deleteStringArray(int clientId, std::string input)
+    {
+        return m_ClientArray[clientId]->deleteEntry(input);
+    }
+
+    void createClientArray(int clientId)
+    {
+        if (m_ClientArray.find(clientId) == m_ClientArray.end())
+        {
+            m_ClientArray.insert(std::make_pair(clientId, std::make_unique<DynamicStringArray>()));
+            m_number_of_clients++;
+        }
+    }
+
+    void exitClient() {
+        m_number_of_clients--;
+    }
+    int getNumberOfClients() {
+        return m_number_of_clients;
     }
 };
 
