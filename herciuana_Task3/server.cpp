@@ -66,6 +66,18 @@ int main()
       {
         break;
       }
+      case CommandIds::GET:
+      {
+        if (dynamicArray.getEntry(std::stoi(commandPair.second)))
+        {
+          msm.construct<stringIpc>(GET_COMMAND.c_str())((*dynamicArray.getEntry(std::stoi(commandPair.second))).c_str(), msm.get_segment_manager());
+        }
+        else
+        {
+          msm.construct<stringIpc>(GET_COMMAND.c_str())("Not found", msm.get_segment_manager());
+        }
+        break;
+      }
       }
       condition->notify_all();
     }

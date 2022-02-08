@@ -67,6 +67,13 @@ int main()
         msm.destroy<stringIpc>(DELETE_COMMAND.c_str());
         break;
       }
+      case CommandIds::GET:
+      {
+        std::pair<stringIpc *, size_t> p = msm.find<stringIpc>(GET_COMMAND.c_str());
+        std::cout << p.first->c_str() << std::endl;
+        msm.destroy<stringIpc>(GET_COMMAND.c_str());
+        break;
+      }
       }
     }
   }
