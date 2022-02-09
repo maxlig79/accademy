@@ -4,7 +4,9 @@
 int main()
 {
   MessageQueueRequest mqStruct;
+  int nrClients;
   DynamicStringArray dynamicArray;
+  std::map<int, std::shared_ptr<DynamicStringArray>> ClientArray;
 
   message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
   shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
@@ -21,9 +23,15 @@ int main()
 
   try
   {
-    while (strcmp(mqStruct.command, EXIT_COMMAND.c_str()) != 0)
+    do
     {
       mq.receive(&mqStruct, MAX_MESSAGE_SIZE, recvd_size, priority);
+      if (ClientArray.find(mqStruct.idClient) == ClientArray.end())
+      {
+        ClientArray.insert(std::make_pair(mqStruct.idClient, std::make_unique<DynamicStringArray>()));
+        nrClients++;
+      }
+
       CommandPair commandPair = split_command(mqStruct.command);
 
       scoped_lock<interprocess_mutex> lock(*mutexIpc);
@@ -43,20 +51,25 @@ int main()
       }
       case CommandIds::EXIT:
       {
-        message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
-        shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+        if (nrClients == 1)
+        {
+          message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
+          shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+        }
+        nrClients--;
+
         break;
       }
 
       case CommandIds::ADD:
       {
-        dynamicArray.addEntry(commandPair.second);
+        ClientArray[mqStruct.idClient]->addEntry(commandPair.second);
         managedSm.find_or_construct<SharedStringIpc>(ADD_COMMAND.c_str())("Add OK", managedSm.get_segment_manager());
         break;
       }
       case CommandIds::DELETE:
       {
-        if (dynamicArray.deleteEntry(commandPair.second))
+        if (ClientArray[mqStruct.idClient]->deleteEntry(commandPair.second))
         {
           managedSm.construct<SharedStringIpc>(DELETE_COMMAND.c_str())("DELETE OK", managedSm.get_segment_manager());
         }
@@ -68,9 +81,9 @@ int main()
       }
       case CommandIds::GET:
       {
-        if (dynamicArray.getEntry(std::stoi(commandPair.second)))
+        if (ClientArray[mqStruct.idClient]->getEntry(std::stoi(commandPair.second)))
         {
-          managedSm.construct<SharedStringIpc>(GET_COMMAND.c_str())((*dynamicArray.getEntry(std::stoi(commandPair.second))).c_str(), managedSm.get_segment_manager());
+          managedSm.construct<SharedStringIpc>(GET_COMMAND.c_str())((*ClientArray[mqStruct.idClient]->getEntry(std::stoi(commandPair.second))).c_str(), managedSm.get_segment_manager());
         }
         else
         {
@@ -79,8 +92,8 @@ int main()
         break;
       }
       }
-      conditionIpc->notify_all();
-    }
+      conditionIpc->notify_one();
+    } while (nrClients != 0);
   }
   catch (const std::exception &e)
   {
