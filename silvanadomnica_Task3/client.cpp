@@ -18,7 +18,9 @@ int main()
     {
       cout << "Insert command: " << endl;
       cin >> mqStruct.command;
+      mqStruct.idClient = getpid();
       mq.send(&mqStruct, MAX_MESSAGE_SIZE, 0);
+
       CommandPair commandPair = split_command(mqStruct.command);
 
       scoped_lock<interprocess_mutex> lock(*mutexIpc);

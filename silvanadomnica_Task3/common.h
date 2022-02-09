@@ -10,6 +10,7 @@
 #include <boost/interprocess/containers/string.hpp>
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/interprocess/ipc/message_queue.hpp>
+#include <boost/interprocess/containers/map.hpp>
 #include <iostream>
 #include <boost/asio.hpp>
 #include <chrono>
@@ -30,6 +31,7 @@ typedef vector<SharedStringIpc, StringAllocator> SharedStringVector;
 struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
+    int idClient;
 };
 
 const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
@@ -70,7 +72,7 @@ enum class CommandIds : int
     ADD,
     DELETE,
     GET
-};
+}; 
 
 const std::map<const std::string, const CommandIds> COMMAND_TO_ID{
     std::make_pair(HELP_COMMAND, CommandIds::HELP),
