@@ -20,9 +20,11 @@ namespace base
     protected:
         std::unique_ptr<boost::interprocess::message_queue> mq;
         std::unique_ptr<boost::interprocess::managed_shared_memory> shm;
-        std::unique_ptr<boost::interprocess::named_condition> cond;
-        std::unique_ptr<boost::interprocess::named_mutex> mutex;
+        std::unique_ptr<boost::interprocess::named_condition> id_cond;
+        std::unique_ptr<boost::interprocess::named_mutex> proc_mutex;
+        boost::interprocess::interprocess_mutex* mem_mutex;
 
+    protected:
         std::string getValue();
         void setValue(const std::string &value);
 
@@ -32,8 +34,13 @@ namespace base
         int getIndex();
         void setIndex(int value);
 
-    private:
-        int clearShared();
+        int getId();
+        void setId(int value);
+
+        boost::interprocess::interprocess_condition *getCondition(int index);
+
+    public:
+        int clearSharedMemory();
     };
 }
 

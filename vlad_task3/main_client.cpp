@@ -2,18 +2,25 @@
 #include <ClientProxyObject.hpp>
 #include <Common.hpp>
 #include <thread>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <EnumCast.hpp>
 
 using namespace common;
 
 int main()
 {
     client::ClientProxyObject obj;
-    int code = 0;
+    int code;
     do
     {
         obj.printHelp();
-        std::cout << "Enter: ";
-        std::cin >> code;
+        std::cout << "Enter command: ";
+        std::string command;
+        std::cin >> command;
+        EnumCast<Command> command_cast = EnumCast<Command>(Command::ADD, "add")(Command::GET, "get")(Command::DELETE, "delete")(Command::EXIT, "exit");
+        code = (int)(command_cast(command));
         switch (code)
         {
         case GET:
@@ -74,6 +81,7 @@ int main()
         }
         break;
         }
+        std::cout << std::endl;
 
     } while (code != common::EXIT);
 

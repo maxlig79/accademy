@@ -1,4 +1,7 @@
 #include <ProxyBase.hpp>
+#include <boost/format.hpp>
+#include <iostream>
+#include <limits>
 
 using namespace common;
 
@@ -7,26 +10,28 @@ namespace base
 
     ProxyBase::ProxyBase(boost::interprocess::open_only_t open_only) : shm(std::make_unique<boost::interprocess::managed_shared_memory>(open_only, _SHM.c_str())),
                                                                        mq(std::make_unique<boost::interprocess::message_queue>(open_only, _MQ.c_str())),
-                                                                       cond(std::make_unique<boost::interprocess::named_condition>(open_only, _COND.c_str())),
-                                                                       mutex(std::make_unique<boost::interprocess::named_mutex>(open_only, _MUTEX.c_str()))
+                                                                       id_cond(std::make_unique<boost::interprocess::named_condition>(open_only, _COND.c_str())),
+                                                                       proc_mutex(std::make_unique<boost::interprocess::named_mutex>(open_only, _PROC_MUTEX.c_str())),
+                                                                       mem_mutex(shm->find<boost::interprocess::interprocess_mutex>(_MEM_MUTEX.c_str()).first)
     {
     }
 
     ProxyBase::ProxyBase(boost::interprocess::create_only_t create_only)
     {
-        clearShared();
-        shm = std::make_unique<boost::interprocess::managed_shared_memory>(create_only, _SHM.c_str(), 1024);
+        clearSharedMemory();
+        shm = std::make_unique<boost::interprocess::managed_shared_memory>(create_only, _SHM.c_str(), UINT16_MAX);
         mq = std::make_unique<boost::interprocess::message_queue>(create_only, _MQ.c_str(), 10, sizeof(int));
-        cond = std::make_unique<boost::interprocess::named_condition>(create_only, _COND.c_str());
-        mutex = std::make_unique<boost::interprocess::named_mutex>(create_only, _MUTEX.c_str());
+        id_cond = std::make_unique<boost::interprocess::named_condition>(create_only, _COND.c_str());
+        proc_mutex = std::make_unique<boost::interprocess::named_mutex>(create_only, _PROC_MUTEX.c_str());
+        mem_mutex = shm->construct<boost::interprocess::interprocess_mutex>(_MEM_MUTEX.c_str())();
     }
 
-    int ProxyBase::clearShared()
+    int ProxyBase::clearSharedMemory()
     {
         boost::interprocess::named_condition::remove(_COND.c_str());
         boost::interprocess::message_queue::remove(_MQ.c_str());
         boost::interprocess::shared_memory_object::remove(_SHM.c_str());
-        boost::interprocess::named_mutex::remove(_MUTEX.c_str());
+        boost::interprocess::named_mutex::remove(_PROC_MUTEX.c_str());
         return 0;
     }
 
@@ -64,5 +69,28 @@ namespace base
     {
         int *status = shm->find_or_construct<int>(RESULT.c_str())((int)value);
         *status = (int)value;
+    }
+
+    int ProxyBase::getId()
+    {
+        std::pair<int *, unsigned long> p = shm->find<int>(CLIENT_ID.c_str());
+        return (Status)(*p.first);
+    }
+
+    void ProxyBase::setId(int value)
+    {
+        int *id = shm->find_or_construct<int>(CLIENT_ID.c_str())(value);
+        *id = value;
+    }
+
+    boost::interprocess::interprocess_condition *ProxyBase::getCondition(int index)
+    {
+        using boost::interprocess::interprocess_condition;
+        std::pair<interprocess_condition*, unsigned long> p = shm->find<interprocess_condition>(CONDITIONS.c_str());
+        if(index >= p.second)
+        {
+            throw std::out_of_range("Condition index out of range");
+        }
+        return p.first + index;
     }
 }
