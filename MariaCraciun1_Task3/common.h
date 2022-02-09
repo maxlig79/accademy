@@ -6,13 +6,13 @@
 #include <boost/interprocess/containers/vector.hpp>
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <cstring>
 #include <stddef.h>
 #include <string>
 #include <vector>
 #include <utility>
-#include <boost/algorithm/string.hpp>
 #include <map>
 #include "DynamicStringArray.hpp"
 
@@ -28,6 +28,7 @@ constexpr size_t MAX_COMMAND_LENGTH = 100;
 struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
+    int clientID;
 };
 
 const std::string MUTEX_IPC("academy_ipc_task_Mutex");

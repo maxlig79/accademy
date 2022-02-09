@@ -15,12 +15,15 @@ class Client
     auto mutex = msgShm.find_or_construct<interprocess_mutex> (MUTEX_IPC.c_str())();
     auto condition = msgShm.find_or_construct<interprocess_condition> (CONDITION_IPC.c_str())();
 
-    while ((strcmp(msgCmd.command, "exit") != 0))
+    while ((strcmp(msgCmd.command, EXIT_COMMAND.c_str()) != 0))
     {
       std::cout<<"\nInsert command:"<<std::endl;
       std::cin >> msgCmd.command;
-      
+
+      msgCmd.clientID = getpid();
+
       msgQ.send (&msgCmd, MAX_MESSAGE_SIZE, 0);
+
       CommandPair commandPair = split_command (msgCmd.command);
 
       scoped_lock <interprocess_mutex> lock (*mutex);
@@ -73,7 +76,7 @@ class Client
 
         default: { break; }
       }
-     }
+     } 
     }
 };
 
