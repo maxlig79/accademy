@@ -11,6 +11,7 @@ using namespace boost::interprocess;
 
 int main()
 {
+  int nr_clients;
   MessageQueueRequest MQR;
   DynamicStringArray dynamicArray;
   typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
@@ -23,11 +24,18 @@ int main()
   unsigned int priority;
   auto mutex = msm.find_or_construct<interprocess_mutex>(MUTEX_IPC_NAME.c_str())();
   auto condition = msm.find_or_construct<interprocess_condition>(COND_IPC_NAME.c_str())();
+  std::map<int, std::shared_ptr<DynamicStringArray>> ClientArray;
+
   try
   {
-    while (strcmp(MQR.command, "EXIT") != 0)
+    do
     {
       mq.receive(&MQR, MAX_MESSAGE_SIZE, recv_size, priority);
+      if (ClientArray.find(MQR.ID_Client) == ClientArray.end())
+      {
+        ClientArray.insert(std::make_pair(MQR.ID_Client, std::make_unique<DynamicStringArray>()));
+        nr_clients++;
+      }
       CommandPair commandPair = split_command(MQR.command);
       scoped_lock<interprocess_mutex> lock(*mutex);
       switch (commandPair.first)
@@ -39,20 +47,24 @@ int main()
       }
       case CommandIds::EXIT:
       {
-        message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
-        shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+        if (nr_clients == 1)
+        {
+          message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
+          shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+        }
+        nr_clients--;
         break;
       }
       case CommandIds::ADD:
       {
-        dynamicArray.addEntry(commandPair.second);
+        ClientArray[MQR.ID_Client]->addEntry(commandPair.second);
         stringIpc *s = msm.find_or_construct<stringIpc>(ADD_COMMAND.c_str())("Add OK", msm.get_segment_manager());
         cout << (*s) << endl;
         break;
       }
       case CommandIds::DELETE:
       {
-        if (dynamicArray.deleteEntry(commandPair.second) == true)
+        if (ClientArray[MQR.ID_Client]->deleteEntry(commandPair.second) == true)
         {
           msm.construct<stringIpc>(DELETE_COMMAND.c_str())("Delete OK", msm.get_segment_manager());
         }
@@ -68,9 +80,9 @@ int main()
       }
       case CommandIds::GET:
       {
-        if (dynamicArray.getEntry(std::stoi(commandPair.second)))
+        if (ClientArray[MQR.ID_Client]->getEntry(std::stoi(commandPair.second)))
         {
-          msm.construct<stringIpc>(GET_COMMAND.c_str())((*dynamicArray.getEntry(std::stoi(commandPair.second))).c_str(), msm.get_segment_manager());
+          msm.construct<stringIpc>(GET_COMMAND.c_str())((*ClientArray[MQR.ID_Client]->getEntry(std::stoi(commandPair.second))).c_str(), msm.get_segment_manager());
         }
         else
         {
@@ -79,8 +91,8 @@ int main()
         break;
       }
       }
-      condition->notify_all();
-    }
+      condition->notify_one();
+    } while (nr_clients != 0);
   }
 
   catch (const std::exception &e)
