@@ -8,12 +8,9 @@ using namespace common;
 
 namespace client
 {
-    ClientProxyObject::ClientProxyObject() : 
-    ProxyBase(boost::interprocess::open_only),
-    timeout(boost::posix_time::millisec(10))
+    ClientProxyObject::ClientProxyObject() : ProxyBase(boost::interprocess::open_only)
     {
-        id = connect();
-        condition = getCondition(id);
+        id = getpid();
     }
 
     bool ClientProxyObject::addString(const std::string &str)
@@ -43,6 +40,7 @@ namespace client
         {
             throw std::runtime_error("Server is not available");
         }
+        setId(id);
         mq->send(&code, sizeof(int), 0);
     }
 
@@ -60,33 +58,19 @@ namespace client
         return getValue();
     }
 
-    int ClientProxyObject::connect()
-    {
-        boost::interprocess::scoped_lock<boost::interprocess::named_mutex> proc_lk(*proc_mutex);
-        boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> mem_lk(*mem_mutex);
-        int code = ID;
-        setId(id);
-        mq->send(&code, sizeof(int), 0);
-        id_cond->wait(mem_lk);
-        if (!getServerAvailable())
-        {
-            throw std::runtime_error("Server is not available");
-        }
-        int clientId = getId();
-        return clientId;
-    }
-
-    int ClientProxyObject::getClientId()
-    {
-        return id;
-    }
-
     void ClientProxyObject::printHelp()
     {
         boost::interprocess::scoped_lock<boost::interprocess::named_mutex> proc_lk(*proc_mutex);
         boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> mem_lk(*mem_mutex);
         sendCommand(HELP, mem_lk);
-        std::cout << getValue();
+        if (getStatus() == SUCCESS)
+        {
+            std::cout << getValue();
+        }
+        else
+        {
+            std::cout << "An error has occurred" << std::endl;
+        }
     }
 
     bool ClientProxyObject::getServerAvailable()
@@ -104,6 +88,6 @@ namespace client
         {
             throw std::runtime_error("Server is not available");
         }
-        condition->wait(lk);   
+        cond->wait(lk);
     }
 }

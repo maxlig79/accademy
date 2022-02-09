@@ -10,7 +10,7 @@ namespace base
 
     ProxyBase::ProxyBase(boost::interprocess::open_only_t open_only) : shm(std::make_unique<boost::interprocess::managed_shared_memory>(open_only, _SHM.c_str())),
                                                                        mq(std::make_unique<boost::interprocess::message_queue>(open_only, _MQ.c_str())),
-                                                                       id_cond(std::make_unique<boost::interprocess::named_condition>(open_only, _COND.c_str())),
+                                                                       cond(std::make_unique<boost::interprocess::named_condition>(open_only, _COND.c_str())),
                                                                        proc_mutex(std::make_unique<boost::interprocess::named_mutex>(open_only, _PROC_MUTEX.c_str())),
                                                                        mem_mutex(shm->find<boost::interprocess::interprocess_mutex>(_MEM_MUTEX.c_str()).first)
     {
@@ -21,7 +21,7 @@ namespace base
         clearSharedMemory();
         shm = std::make_unique<boost::interprocess::managed_shared_memory>(create_only, _SHM.c_str(), UINT16_MAX);
         mq = std::make_unique<boost::interprocess::message_queue>(create_only, _MQ.c_str(), 10, sizeof(int));
-        id_cond = std::make_unique<boost::interprocess::named_condition>(create_only, _COND.c_str());
+        cond = std::make_unique<boost::interprocess::named_condition>(create_only, _COND.c_str());
         proc_mutex = std::make_unique<boost::interprocess::named_mutex>(create_only, _PROC_MUTEX.c_str());
         mem_mutex = shm->construct<boost::interprocess::interprocess_mutex>(_MEM_MUTEX.c_str())();
     }
@@ -81,16 +81,5 @@ namespace base
     {
         int *id = shm->find_or_construct<int>(CLIENT_ID.c_str())(value);
         *id = value;
-    }
-
-    boost::interprocess::interprocess_condition *ProxyBase::getCondition(int index)
-    {
-        using boost::interprocess::interprocess_condition;
-        std::pair<interprocess_condition*, unsigned long> p = shm->find<interprocess_condition>(CONDITIONS.c_str());
-        if(index >= p.second)
-        {
-            throw std::out_of_range("Condition index out of range");
-        }
-        return p.first + index;
     }
 }

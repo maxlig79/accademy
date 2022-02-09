@@ -12,8 +12,8 @@ namespace server
     private:
         std::atomic_bool active;
         std::map<int, DynamicArray> arrs;
-        int current_client_id;
         int max_clients;
+        
 
     public:
         ServerProxyObject(int max_clients);
@@ -22,6 +22,7 @@ namespace server
     public:
         void run();
         void stop();
+
     private:
         void setServerAvailable(bool value);
     };

@@ -8,10 +8,6 @@
 #include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/interprocess/sync/named_condition.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
-#include <chrono>
-#include <thread>
-#include <mutex>
-#include <boost/chrono.hpp>
 
 namespace client
 {
@@ -19,8 +15,6 @@ namespace client
     {
     private:
         int id;
-        boost::interprocess::interprocess_condition *condition;
-        boost::posix_time::time_duration timeout;
 
     private:
         int connect();
@@ -33,7 +27,6 @@ namespace client
         bool deleteString(const std::string &str);
         std::string get(int index, bool &has_string);
         void exit();
-        int getClientId();
         void printHelp();
     };
 }

@@ -35,6 +35,7 @@ namespace common
     const std::string _MEM_MUTEX = "CAT_MUTEX";
     const std::string _PROC_MUTEX = "CAT_MUTEX";
     const std::string _SERVER_AVAILABLE = "CAT_SERVER_AVAILABLE";
+    const int MAX_CLIENTS = 5;
 }
 typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> StringAllocator;
 typedef boost::interprocess::basic_string<char, std::char_traits<char>, StringAllocator> ShmString;

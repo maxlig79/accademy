@@ -13,7 +13,7 @@ using namespace common;
 
 int main()
 {
-    server::ServerProxyObject serv(5);
+    server::ServerProxyObject serv(MAX_CLIENTS);
     serv.run();
     return 0;
 }
