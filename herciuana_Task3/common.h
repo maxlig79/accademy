@@ -13,6 +13,7 @@ constexpr size_t MAX_COMMAND_LENGTH = 100;
 struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
+    int ID_Client;
 };
 
 const std::string COND_IPC_NAME("academy_ipc_task_cond");

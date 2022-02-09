@@ -8,10 +8,10 @@
 
 using namespace boost::interprocess;
 using namespace std;
+
 int main()
 {
   MessageQueueRequest MQR;
-
   typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
   typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> stringIpc;
 
@@ -21,11 +21,14 @@ int main()
 
   auto mutex = msm.find_or_construct<interprocess_mutex>(MUTEX_IPC_NAME.c_str())();
   auto condition = msm.find_or_construct<interprocess_condition>(COND_IPC_NAME.c_str())();
+  
   try
   {
     while (strcmp(MQR.command, "exit") != 0)
     {
+      cout<<"Insert command:"<<endl;
       cin >> MQR.command;
+      MQR.ID_Client = getpid();
       mq.send(&MQR, MAX_MESSAGE_SIZE, 0);
       CommandPair commandPair = split_command(MQR.command);
       scoped_lock<interprocess_mutex> lock(*mutex);
