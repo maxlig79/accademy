@@ -11,6 +11,9 @@ class Server
   
   void start()
   {
+    int clientNumber = 0;
+    bool serverRunning = true;
+    std::map <int, std::shared_ptr<DynamicStringArray>> clientsArray;
     message_queue msgQ (open_or_create, MESSAGE_QUEUE_NAME.c_str(),MAX_MESSAGE_NUMBER, MAX_MESSAGE_SIZE);
     managed_shared_memory msgShm (open_or_create,SHARED_MEMORY_NAME.c_str(), SHARED_MEMORY_SIZE);
 
@@ -21,10 +24,16 @@ class Server
 
    auto mutex = msgShm.find_or_construct <interprocess_mutex> (MUTEX_IPC.c_str()) ();
    auto condition = msgShm.find_or_construct <interprocess_condition> (CONDITION_IPC.c_str()) ();
-
-   while ((strcmp(msgCmd.command, "exit") != 0))
+   
+   while ( serverRunning == true )
    {
       msgQ.receive (&msgCmd, sizeof(msgCmd), recvd_size, priority);
+
+      if(clientsArray.find(msgCmd.clientID) == clientsArray.end())
+      {
+        clientsArray.insert(std::make_pair(msgCmd.clientID, std::make_unique<DynamicStringArray>() ) );
+        clientNumber++;
+      }
       CommandPair commandPair = split_command (msgCmd.command);
   
       scoped_lock <interprocess_mutex> lock (*mutex);
@@ -45,14 +54,20 @@ class Server
 
         case CommandIds::EXIT:
         {
-          message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
-          shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+          if(clientNumber == 1)
+          {
+            message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
+            shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
+            serverRunning = false;
+          }
+          
+          clientNumber--; 
         break;
         }
         
         case CommandIds::ADD:
         {
-          stringArray.addEntry (commandPair.second);
+          clientsArray[msgCmd.clientID] -> addEntry (commandPair.second);
           msgShm.find_or_construct <MyStringAllocator> (ADD_COMMAND.c_str()) 
           ("Add ok",msgShm.get_segment_manager());
         break;
@@ -60,7 +75,7 @@ class Server
         
         case CommandIds::DELETE:
         {
-          if (stringArray.deleteEntry (commandPair.second) == true)
+          if (clientsArray[msgCmd.clientID] -> deleteEntry (commandPair.second) == true)
           {
             msgShm.construct <MyStringAllocator> (DELETE_COMMAND.c_str()) 
             ("Delete ok",msgShm.get_segment_manager());
@@ -73,10 +88,10 @@ class Server
         
         case CommandIds::GET:
         {
-          if (stringArray.getEntry(std::stoi(commandPair.second)))
+          if (clientsArray[msgCmd.clientID] -> getEntry(std::stoi(commandPair.second)))
           {
             msgShm.construct <MyStringAllocator> (GET_COMMAND.c_str()) 
-            ((*stringArray.getEntry (std::stoi(commandPair.second))).c_str(), msgShm.get_segment_manager());
+            ((*clientsArray[msgCmd.clientID] -> getEntry (std::stoi(commandPair.second))).c_str(), msgShm.get_segment_manager());
           } else {
             msgShm.construct <MyStringAllocator> (GET_COMMAND.c_str()) 
             ("Element not found",msgShm.get_segment_manager() );
@@ -87,7 +102,7 @@ class Server
         default: { break; }
       }
       condition->notify_one();
-   }
+   } 
   }
 
 };
