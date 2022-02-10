@@ -11,11 +11,9 @@
 
 using namespace common;
 
-DynamicArray arr;
-
 int main()
 {
-    server::ServerProxyObject serv(&arr);
+    server::ServerProxyObject serv(MAX_CLIENTS);
     serv.run();
     return 0;
 }

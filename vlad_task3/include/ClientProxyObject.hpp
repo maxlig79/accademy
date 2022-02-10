@@ -8,15 +8,18 @@
 #include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/interprocess/sync/named_condition.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
-#include <thread>
-#include <mutex>
 
 namespace client
 {
     class ClientProxyObject : public base::ProxyBase
     {
     private:
-        std::mutex thread_mutex;
+        int id;
+
+    private:
+        int connect();
+        bool getServerAvailable();
+        void sendCommand(common::Command command, boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> &lk);
 
     public:
         ClientProxyObject();

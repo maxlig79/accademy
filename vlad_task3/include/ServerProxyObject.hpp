@@ -3,20 +3,28 @@
 
 #include <ProxyBase.hpp>
 #include <DynamicArray.hpp>
+#include <atomic>
 
 namespace server
 {
     class ServerProxyObject : public base::ProxyBase
     {
     private:
-        bool active;
-        DynamicArray *arr;
+        std::atomic_bool active;
+        std::map<int, DynamicArray> arrs;
+        int max_clients;
+        
 
     public:
-        ServerProxyObject(DynamicArray *arr);
-
+        ServerProxyObject(int max_clients);
+        ~ServerProxyObject();
+        
     public:
         void run();
+        void stop();
+
+    private:
+        void setServerAvailable(bool value);
     };
 
 }
