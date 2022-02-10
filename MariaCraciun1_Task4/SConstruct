@@ -1,0 +1,6 @@
+from SCons.Environment import Environment
+
+env = Environment() 
+env.Append(CCFLAGS=['-g' , '-std=c++17'], LIBS=['tbb'])
+env.ParseConfig('pkg-config --cflags --libs opencv4')
+env.Program(target= "main", source= ["main.cpp"])
