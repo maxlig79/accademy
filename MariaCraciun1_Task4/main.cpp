@@ -14,14 +14,13 @@ int main( int argc, char** argv )
     cv::Mat photoLuna;
     
     photoLuna = cv::imread(Photo,cv::IMREAD_COLOR);
-
     cv::resize(photoLuna, photoLuna, cv::Size(), ScaleFactor, ScaleFactor);
 
-    if(! photoLuna.data)
-        {
-            std::cout<<"Could not open file" << std::endl;
-            return -1;
-        }
+    if(!photoLuna.data)
+    {
+        std::cout<<"Could not open file" << std::endl;
+        return -1;
+    }
     
     cv::Mat copyPhotoLuna = photoLuna.clone();
 
