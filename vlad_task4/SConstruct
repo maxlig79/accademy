@@ -8,5 +8,9 @@ opencv_libs = path.join(opencv_path, "lib")
 
 env = Environment()
 env.Append(CXXFLAGS=["-g"], CPPPATH=[opencv_includes], LIBPATH=[opencv_libs])
+try:
+    env.ParseConfig("pkg-config --cflags --libs opencv4")
+except:
+    pass
 
 env.Program("brightness", ["brightness.cpp"], LIBS=["opencv_core", "opencv_imgproc", "opencv_highgui", "opencv_imgcodecs"])
