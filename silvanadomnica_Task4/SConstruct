@@ -1,0 +1,8 @@
+from SCons.Environment import Environment
+
+env = Environment() 
+env.Append(CCFLAGS=['-g' , '-std=c++17'])
+#env.Append(LIBS=['pkg-config --libs opencv4'])
+env.ParseConfig('pkg-config --cflags --libs opencv4')
+env.Append(LIBS=['tbb'])
+env.Program(target = "image", source = ["image_contrast.cpp"])
