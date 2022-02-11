@@ -16,37 +16,6 @@ void help()
     std::cout << h << std::endl;
 }
 
-//Saturated addition and subtraction
-void addBrightness(uchar &pixel, int brightness)
-{
-    pixel =
-    (
-        (brightness > 0) * (
-            (brightness <= UCHAR_MAX - pixel) *
-            (
-                pixel + brightness
-            )
-            +
-            (brightness > UCHAR_MAX - pixel) *
-            (
-                UCHAR_MAX
-            )
-        )
-        +
-        (brightness < 0) * (
-            (-brightness <= pixel) *
-            (
-                pixel + brightness
-            )
-            +
-            (-brightness > pixel) *
-            (
-                0
-            )
-        )
-    );
-}
-
 int main(int argc, char **argv)
 {
     cv::CommandLineParser parser(argc, argv,
@@ -71,9 +40,9 @@ int main(int argc, char **argv)
         for (int j = 0; j < image.cols; j++)
         {
             cv::Vec3b &rgbPixel = image.at<cv::Vec3b>(i, j);
-            addBrightness(rgbPixel[0], brightness);
-            addBrightness(rgbPixel[1], brightness);
-            addBrightness(rgbPixel[2], brightness);
+            rgbPixel[0] = cv::saturate_cast<uchar>(rgbPixel[0] + brightness);
+            rgbPixel[1] = cv::saturate_cast<uchar>(rgbPixel[1] + brightness);
+            rgbPixel[2] = cv::saturate_cast<uchar>(rgbPixel[2] + brightness);
         }
     }
     std::string windowOriginalImage = "Original Image";
