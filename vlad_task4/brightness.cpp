@@ -21,7 +21,8 @@ int main(int argc, char **argv)
     cv::CommandLineParser parser(argc, argv,
                                  "{help h ||}"
                                  "{@filename | ./opencv2.jfif | Image file to process}"
-                                 "{brightness b | 50 | Brightness that will be added to the image}"
+                                 "{brightness b | 50 | Brightness that will be added to the image }"
+                                 "{contrast c | 1 | Contrast, greater or equal than zero}"
 
     );
 
@@ -32,6 +33,12 @@ int main(int argc, char **argv)
         return 0;
     }
     int brightness = parser.get<int>("brightness");
+    double contrast = parser.get<double>("contrast");
+    if(contrast < 0)
+    {
+        std::cout << "Contrast must be greater or equal than zero" << std::endl;
+        return -1;
+    }
     cv::Mat originalImage = cv::imread(filename);
     cv::Mat image = originalImage.clone();
     
@@ -40,9 +47,9 @@ int main(int argc, char **argv)
         for (int j = 0; j < image.cols; j++)
         {
             cv::Vec3b &rgbPixel = image.at<cv::Vec3b>(i, j);
-            rgbPixel[0] = cv::saturate_cast<uchar>(rgbPixel[0] + brightness);
-            rgbPixel[1] = cv::saturate_cast<uchar>(rgbPixel[1] + brightness);
-            rgbPixel[2] = cv::saturate_cast<uchar>(rgbPixel[2] + brightness);
+            rgbPixel[0] = cv::saturate_cast<uchar>(contrast * rgbPixel[0] + brightness);
+            rgbPixel[1] = cv::saturate_cast<uchar>(contrast * rgbPixel[1] + brightness);
+            rgbPixel[2] = cv::saturate_cast<uchar>(contrast * rgbPixel[2] + brightness);
         }
     }
     std::string windowOriginalImage = "Original Image";
