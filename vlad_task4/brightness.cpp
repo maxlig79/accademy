@@ -6,6 +6,7 @@
 #include <chrono>
 #include <algorithm>
 #include <execution>
+#include <mutex>
 
 class Timer
 {
@@ -35,6 +36,11 @@ public:
         int micro = std::chrono::duration_cast<std::chrono::microseconds>(m_end - m_start).count();
         std::cout << str << ": " << micro << std::endl;
     }
+
+    int get()
+    {
+        return std::chrono::duration_cast<std::chrono::microseconds>(m_end - m_start).count();
+    }
 };
 void help()
 {
@@ -45,49 +51,85 @@ void help()
         "[--brightness | -b The amount of brightness added to the image (can't be a negative number)]\n"
         "[filename The image file]\n"
         "Example:\n"
-        "./brightness ./opencv2.jfif --brightness=20";
+        "./brightness ./opencv2.jfif --brightness=-10 --contrast=1.5";
 
     std::cout << h << std::endl;
 }
 
-void addBrightness(cv::Mat &image, double contrast, int brightness, int start, int step)
+void addBrightness(cv::Mat &inputImage, cv::Mat &outputImage, double contrast, int brightness, int start, int step)
 {
-    //Classic for-loops
-    for (int i = start; i < image.rows; i += step)
+    // Classic for-loops
+    for (int i = start; i < inputImage.rows; i += step)
     {
-        for (int j = 0; j < image.cols; j++)
+        for (int j = 0; j < inputImage.cols; j++)
         {
-            for (int c = 0; c < image.channels(); c++)
+            cv::Vec3b &out = outputImage.at<cv::Vec3b>(i, j);
+            for (int c = 0; c < inputImage.channels(); c++)
             {
-                uchar &rgb = image.at<cv::Vec3b>(i, j)[c];
-                rgb = cv::saturate_cast<uchar>(contrast * rgb + brightness);
+                uchar rgb = inputImage.at<cv::Vec3b>(i, j)[c];
+                out[c] = cv::saturate_cast<uchar>(contrast * rgb + brightness);
             }
         }
     }
+}
 
-    //Linear traversal of matrix
-    /* for (int k = start; k < image.rows * image.cols; k += step)
+void useSequentialLoop(cv::Mat &src, cv::Mat &dest, double contrast, int brightness)
+{
+    addBrightness(src, dest, contrast, brightness, 0, 1);
+}
+
+void useThreadPool(cv::Mat &src, cv::Mat &dest, double contrast, int brightness)
+{
+    int threads = std::thread::hardware_concurrency();
+    std::vector<std::shared_future<void>> tasks;
+    for (int i = 0; i < threads; i++)
     {
-        int i = k / image.cols;
-        int j = k % image.cols;
-        for (int c = 0; c < image.channels(); c++)
-        {
-            uchar &rgb = image.at<cv::Vec3b>(i, j)[c];
-            rgb = cv::saturate_cast<uchar>(contrast * rgb + brightness);
-        }
-    } */
+        std::shared_future<void> task = std::async(
+            std::launch::async,
+            addBrightness,
+            std::ref(src),
+            std::ref(dest), contrast, brightness, i, threads);
+        tasks.push_back(task);
+    }
 
-    //MatIterator
-    /* cv::MatIterator_<cv::Vec3b> it, end;
-
-    for (it = image.begin<cv::Vec3b>() + start, end = image.end<cv::Vec3b>(); it != end; it += step)
+    for (auto &task : tasks)
     {
-        for(int c = 0;c < image.channels(); c++)
-        {
-            (*it)[c] = cv::saturate_cast<uchar>(contrast * ((*it)[c]) + brightness);
-        }
+        task.get();
+    }
+}
 
-    } */
+void useStandardParallelForEach(cv::Mat &img, double contrast, int brightness)
+{
+    std::for_each(
+        std::execution::par,
+        img.begin<cv::Vec3b>(),
+        img.end<cv::Vec3b>(),
+        [&](cv::Vec3b &pixel)
+        {
+            for (int c = 0; c < img.channels(); c++)
+            {
+                pixel[c] = cv::saturate_cast<uchar>(contrast * pixel[c] + brightness);
+            }
+        });
+}
+
+void useStandardTransform(cv::Mat &src, cv::Mat &dest, double contrast, int brightness)
+{
+    std::transform(
+        std::execution::par,
+        src.begin<cv::Vec3b>(),
+        src.end<cv::Vec3b>(),
+        dest.begin<cv::Vec3b>(),
+        [&](const cv::Vec3b &bgr)
+        {
+            cv::Vec3b res;
+            for(int c = 0; c < src.channels(); c++)
+            {
+                res[c] = cv::saturate_cast<uchar>(contrast * bgr[c] + brightness);
+            }
+            return res;
+        }
+    );
 }
 
 int main(int argc, char **argv)
@@ -95,7 +137,7 @@ int main(int argc, char **argv)
     cv::CommandLineParser parser(argc, argv,
                                  "{help h ||}"
                                  "{@filename | ./opencv2.jfif | Image file to process}"
-                                 "{brightness b | 50 | Brightness that will be added to the image }"
+                                 "{brightness b | 0 | Brightness that will be added to the image }"
                                  "{contrast c | 1 | Contrast, greater or equal than zero}"
 
     );
@@ -114,67 +156,68 @@ int main(int argc, char **argv)
         return -1;
     }
     cv::Mat originalImage = cv::imread(filename);
-    cv::Mat seqImage = originalImage.clone();
-    cv::Mat image = originalImage.clone();
-
+    cv::Mat seqImage;
+    cv::Mat asyncImage;
+    cv::Mat foreachImage;
+    cv::Mat transformImage;
     Timer t;
-    // Sequential
-    t.start();
-    addBrightness(seqImage, contrast, brightness, 0, 1);
-    t.stop();
-    t.print("Sequential time");
-    t.reset();
 
-    // Parallel (std::async)
-    t.start();
-    int threads = std::thread::hardware_concurrency();
-    std::vector<std::shared_future<void>> tasks;
-    for (int i = 0; i < threads; i++)
+    int seqAverage = 0;
+    int threadPoolAverage = 0;
+    int forEachAverage = 0;
+    int transformAverage = 0;
+
+    for (int i = 0; i < 5; i++)
     {
-        std::shared_future<void> task = std::async(std::launch::async, addBrightness, std::ref(image), contrast, brightness, i, threads);
-        tasks.push_back(task);
+        seqImage = cv::Mat::zeros(originalImage.rows, originalImage.cols, originalImage.type());
+        t.start();
+        useSequentialLoop(originalImage, seqImage, contrast, brightness);
+        t.stop();
+        seqAverage += t.get();
+        t.reset();
+        asyncImage = cv::Mat::zeros(originalImage.rows, originalImage.cols, originalImage.type());
+        t.start();
+        useThreadPool(originalImage, asyncImage, contrast, brightness);
+        t.stop();
+        threadPoolAverage += t.get();
+        t.reset();
+        foreachImage = originalImage.clone();
+        t.start();
+        useStandardParallelForEach(foreachImage, contrast, brightness);
+        t.stop();
+        forEachAverage += t.get();
+        t.reset();
+        transformImage = cv::Mat::zeros(originalImage.rows, originalImage.cols, originalImage.type());
+        t.start();
+        useStandardTransform(originalImage, transformImage, contrast, brightness);
+        t.stop();
+        transformAverage += t.get();
+        t.reset();
     }
 
-    for (auto &task : tasks)
-    {
-        task.get();
-    }
-    t.stop();
-    t.print("Parallel time");
-    t.reset();
-
-    // Parallel (std::for_each)
-    cv::Mat foreachImage = originalImage.clone();
-    t.start();
-    std::for_each(
-        std::execution::par,
-        foreachImage.begin<cv::Vec3b>(),
-        foreachImage.end<cv::Vec3b>(),
-        [&](cv::Vec3b &pixel)
-        {
-            for (int c = 0; c < foreachImage.channels(); c++)
-            {
-                pixel[c] = cv::saturate_cast<uchar>(contrast * pixel[c] + brightness);
-            }
-        });
-    t.stop();
-    t.print("for_each");
+    std::cout << "Sequential average: " << seqAverage / 5 << std::endl
+              << "Thread Pool average: " << threadPoolAverage / 5 << std::endl
+              << "for_each average: " << forEachAverage / 5 << std::endl
+              << "transform average: " << transformAverage / 5 << std::endl;
 
     // Show windows
     std::string windowOriginalImage = "Original Image";
     std::string windowProcessedImage = "Processed Image";
     std::string windowSeqImage = "Sequential Image";
     std::string windowParForEach = "Parallel std::forEach";
+    std::string windowTransform = "Parallel std::transform";
 
     cv::namedWindow(windowOriginalImage, cv::WINDOW_NORMAL);
     cv::namedWindow(windowProcessedImage, cv::WINDOW_NORMAL);
     cv::namedWindow(windowSeqImage, cv::WINDOW_NORMAL);
     cv::namedWindow(windowParForEach, cv::WINDOW_NORMAL);
+    cv::namedWindow(windowTransform, cv::WINDOW_NORMAL);
 
     cv::imshow(windowOriginalImage, originalImage);
-    cv::imshow(windowProcessedImage, image);
     cv::imshow(windowSeqImage, seqImage);
+    cv::imshow(windowProcessedImage, asyncImage);
     cv::imshow(windowParForEach, foreachImage);
+    cv::imshow(windowTransform, transformImage);
 
     cv::waitKey(0);
     std::cout << std::thread::hardware_concurrency() << std::endl;
