@@ -56,4 +56,24 @@ BOOST_AUTO_TEST_CASE(test5){
         BOOST_ERROR("This is an error");
 }
 
+BOOST_AUTO_TEST_CASE(test6){
+
+    DynamicStringArray moveArray(DynamicStringArray(vector<string>{"This","is","a","move"}));
+    BOOST_CHECK(moveArray.getSize()==4);
+    BOOST_CHECK(moveArray.getEntry(3)=="move");
+
+}
+
+BOOST_AUTO_TEST_CASE(test7){
+
+    DynamicStringArray moveArray(DynamicStringArray(vector<string>{"This","is","a","move"}));
+    DynamicStringArray vec;
+    vec=std::move(moveArray);
+    BOOST_CHECK(vec.getSize()==4);
+    BOOST_CHECK(vec.getEntry(0)=="This");
+    BOOST_CHECK(vec.getEntry(0)=="is");
+    BOOST_CHECK(vec.getEntry(0)=="a");
+
+}
+
 BOOST_AUTO_TEST_SUITE_END();
