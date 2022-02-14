@@ -20,7 +20,8 @@ BOOST_AUTO_TEST_CASE(test2){
     array2.addEntry("England");
     array2.addEntry("France");
     array2.addEntry("Germany");
-    BOOST_REQUIRE(array2.getSize() == 4);//Test for addEntry with BOOST_REQUIRE
+    BOOST_CHECK_EQUAL(array2.getEntry(0), "Romania");
+    BOOST_CHECK_EQUAL(array2.getEntry(2), "France");//test for getEntry
 }
 BOOST_AUTO_TEST_CASE(test3){
 
@@ -49,19 +50,10 @@ BOOST_AUTO_TEST_CASE(test5){
 
     DynamicStringArray array6,array7;
     array6.addEntry("Romania");
-    array6.addEntry("England");
-    array6.addEntry("France");
-    array6.addEntry("Germany");
+    array7.addEntry("England");
     array6=array7;
-    if(array6.getSize() != array7.getSize())//Test for copy constructor
+    if(array6.getSize() != array7.getSize())//test for assignment operator 
         BOOST_ERROR("This is an error");
 }
 
-BOOST_AUTO_TEST_CASE(test6){
-    DynamicStringArray array1,array2;
-    array1.addEntry("Romania");
-    array2.addEntry("England");
-    array1=array2;
-    BOOST_CHECK(array1.getSize()==array2.getSize()); //Test for overload
-}
 BOOST_AUTO_TEST_SUITE_END();

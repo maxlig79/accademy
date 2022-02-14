@@ -1,8 +1,8 @@
 #include"DynamicStringArray.h"
 #include<iostream>
 using namespace std;
-int main(){
-
+int main()
+{
     DynamicStringArray array;
     array.addEntry("Romania");
     array.addEntry("England");
