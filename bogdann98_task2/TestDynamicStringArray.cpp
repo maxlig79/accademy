@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE(test7){
     vec=std::move(moveArray);
     BOOST_CHECK(vec.getSize()==4);
     BOOST_CHECK(vec.getEntry(0)=="This");
-    BOOST_CHECK(vec.getEntry(0)=="is");
-    BOOST_CHECK(vec.getEntry(0)=="a");
+    BOOST_CHECK(vec.getEntry(1)=="is");
+    BOOST_CHECK(vec.getEntry(2)=="a");
 
 }
 

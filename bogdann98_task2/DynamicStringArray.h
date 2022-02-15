@@ -16,9 +16,10 @@ class DynamicStringArray{
     int getSize() const;
     void addEntry(const string &String);
     bool deleteEntry(const string &String);
-    string getEntry(const int index) const;
+    string getEntry(const int index) const;  
     DynamicStringArray(const vector<string> &vec);
     DynamicStringArray(const DynamicStringArray &obj);
+    DynamicStringArray(DynamicStringArray &&obj);
     DynamicStringArray &operator=(const DynamicStringArray &obj); 
     DynamicStringArray &operator=(DynamicStringArray &&obj);
     ~DynamicStringArray();

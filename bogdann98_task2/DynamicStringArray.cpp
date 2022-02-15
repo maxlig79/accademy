@@ -30,8 +30,8 @@ void DynamicStringArray::addEntry(const string &String)
 bool DynamicStringArray::deleteEntry(const string &String)
 {
         bool found=0;
-              
-        for(int i=0;i<size;i++)
+        int i;
+        for(i=0;i<size;i++)
         {
             if(String==dynamicArray[i])
             {
@@ -41,7 +41,6 @@ bool DynamicStringArray::deleteEntry(const string &String)
         }
         if(found==1)
         {
-            int i;
             string *temp=dynamicArray;
             dynamicArray=new string[size -1];
             for(int j;j<size;j++)
@@ -94,8 +93,6 @@ DynamicStringArray::DynamicStringArray(const vector<string> &vec):DynamicStringA
     {
          DynamicStringArray:addEntry(i);
     }
-    size=vec.size();
-    dynamicArray=new std::string[size];
 
 }
 
@@ -119,14 +116,14 @@ DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
 }
 
 
-DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&vec){
-    if(&vec != this)
+DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&obj){
+    if(&obj != this)
     {
         delete [] dynamicArray;
-        dynamicArray=vec.dynamicArray;
-        size=vec.size;
-        vec.dynamicArray=nullptr;
-        vec.size=0;
+        dynamicArray=obj.dynamicArray;
+        size=obj.size;
+        obj.dynamicArray=nullptr;
+        obj.size=0;
     }
     return *this;
 }
