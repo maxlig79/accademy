@@ -1,6 +1,7 @@
 #include"DynamicStringArray.h"
 #include<iostream>
 #include<string>
+#include<vector>
 //default constructor that sets the dynamic array to nullptr and sets size to 0
 DynamicStringArray::DynamicStringArray () : size {0}, dynamicArray {nullptr} 
 {
@@ -29,7 +30,7 @@ void DynamicStringArray::addEntry(const string &String)
 bool DynamicStringArray::deleteEntry(const string &String)
 {
         bool found=0;
-        int i;      
+        int i;
         for(i=0;i<size;i++)
         {
             if(String==dynamicArray[i])
@@ -83,6 +84,19 @@ DynamicStringArray::DynamicStringArray(const DynamicStringArray &obj)
 
 }
 
+
+//new constructor
+
+DynamicStringArray::DynamicStringArray(const vector<string> &vec):DynamicStringArray()
+{
+    for(auto i : vec)
+    {
+         DynamicStringArray:addEntry(i);
+    }
+
+}
+
+
 //Overload
 
 DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
@@ -97,6 +111,19 @@ DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
         {
             dynamicArray[i] = obj.dynamicArray[i];
         }
+    }
+    return *this;
+}
+
+
+DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&obj){
+    if(&obj != this)
+    {
+        delete [] dynamicArray;
+        dynamicArray=obj.dynamicArray;
+        size=obj.size;
+        obj.dynamicArray=nullptr;
+        obj.size=0;
     }
     return *this;
 }
