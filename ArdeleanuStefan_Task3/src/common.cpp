@@ -6,7 +6,12 @@ const CommandPair split_command(const std::string &command)
     // BONUS TASK: Make this function (much) better!
 
     CommandPair out;
-    if ((command == HELP_COMMAND) || (command == EXIT_COMMAND))
+    if (command == "")
+    {
+        out.first = CommandIds::NEWLINE;
+        out.second = "";
+    }
+    else if ((command == HELP_COMMAND) || (command == EXIT_COMMAND))
     {
         const auto commandID = COMMAND_TO_ID.find(command);
         out.first = commandID->second;
@@ -46,7 +51,7 @@ void start(std::unique_ptr<Server_Client_Base> base)
     {
         if (ptypeinfo == typeid(Client))
         {
-            std::cin >> msg.command;
+            std::cin.getline(msg.command, 100);
             msg.ID_Client = getpid();
             base->getMessageQueue()->send(&msg, sizeof(msg), 0);
         }

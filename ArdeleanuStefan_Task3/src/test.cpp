@@ -1,122 +1,67 @@
+#define BOOST_TEST_MODULE TEST_CLIENT_SERVER_IPC
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MAIN
-#define BOOST_TEST_MODULE MyTest
 #include <boost/test/unit_test.hpp>
-#include "common.h"
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <utility>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <thread>
-#include <future>
+#include <fstream>
+#include <iostream>
+std::ifstream client1{"tmp/log.0"};
+std::ifstream client2{"tmp/log.1"};
 
-bool
-start_subprocess(char *const command[], int *pid, int *infd, int *outfd)
+BOOST_AUTO_TEST_SUITE(ClientServerIPCTest)
+
+BOOST_AUTO_TEST_CASE(test_1)
 {
-	int p1[2], p2[2];
+    system("./src/script.sh ");
+    system("echo 'add;unu\nget;0\ndelete;doi' > tmp/input.pipe");
+    system("echo 'add;doi\nget;1\ndelete;doi' > tmp/input1.pipe");
 
-	if (!pid || !infd || !outfd)
-		return false;
-
-	if (pipe(p1) == -1)
-		goto err_pipe1;
-	if (pipe(p2) == -1)
-		goto err_pipe2;
-	if ((*pid = fork()) == -1)
-		goto err_fork;
-
-	if (*pid) {
-		/* Parent process. */
-		*infd = p1[1];
-		*outfd = p2[0];
-		close(p1[0]);
-		close(p2[1]);
-		return true;
-	} else {
-		/* Child process. */
-		dup2(p1[0], 0);
-		dup2(p2[1], 1);
-		close(p1[0]);
-		close(p1[1]);
-		close(p2[0]);
-		close(p2[1]);
-		execvp(*command, command);
-		/* Error occured. */
-		fprintf(stderr, "error running %s: %s", *command, strerror(errno));
-		abort();
-	}
-
-err_fork:
-	close(p2[1]);
-	close(p2[0]);
-err_pipe2:
-	close(p1[1]);
-	close(p1[0]);
-err_pipe1:
-	return false;
-}
-
-struct DataReceiver
-{
-    void operator()(int outfd, int infd)
+    std::string output;
+    int count = 0;
+    while (std::getline(client1, output))
     {
-        ssize_t n;
-        char buf[128];
-        memset(buf, 0, 128);
-		int counter = 0;
-
-		std::cout << "read before " << std::endl;
-        while (n = read(outfd, buf, sizeof(buf)))
+        switch (count)
         {
-            std::cout << "buf: " << buf << std::endl;
-            std::cout << "n: " << n << std::endl;
-            memset(buf, 0, 128);
-			counter++;
-			if (counter == 5)
-			{
-				break;
-			}
+        case 0:
+            BOOST_CHECK(output == "Add OK");
+            break;
+
+        case 1:
+            BOOST_CHECK(output == "unu");
+            break;
+
+        case 2:
+            BOOST_CHECK(output == "DELETE NOT OK");
+            break;
+        default:
+            break;
         }
 
-		//close(infd);
-		//close(outfd);
+        count++;
     }
-};
 
-BOOST_AUTO_TEST_CASE( my_test )
-{
-    int infd;
-	int outfd;
-    int infd2;
-	int outfd2;
-    pid_t pid;
-    ssize_t n;
-    int expectedResponse = 0;
-    char msg[128] = "add;max\nadd;is\nadd;good\nget;1\n";
-    //char msg[128];
-    char buf[128];
-    std::promise<int> data;
-    char* arg[] = {"/home/projectx/github/stefan/accademy/ArdeleanuStefan_Task3/build/client", NULL};
+    count = 0;
+    while (std::getline(client2, output)){
+        switch (count)
+        {
+        case 0:
+            BOOST_CHECK(output == "Add OK");
+            break;
 
+        case 1:
+            BOOST_CHECK(output == "NOT FOUND");
+            break;
 
-	if (!start_subprocess(arg, &pid, &infd, &outfd))
-    {
-        std::cout << "start_subprocess failed!" << std::endl;
-		exit(1);
-	}
+        case 2:
+            BOOST_CHECK(output == "DELETE OK");
+            break;
+        default:
+            break;
+        }
 
-	std::future<void> result = std::async(DataReceiver(), outfd, infd);
+        count++;
+    }
 
-    //memset(msg, 0, 128);
-    //snprintf(msg, strlen("add;max\nadd;is\nadd;good\nget;1\n")+1, "add;max\nadd;is\nadd;good\nget;1\n");
-	//usleep(500000);
-    std::cout << "write before " << std::endl;
-    write(infd, msg, sizeof(msg));
-    std::cout << "write after " << std::endl;
-
-	//close(outfd);
-	//close(infd);
+    system("echo 'exit' > tmp/input.pipe");
+    system("echo 'exit' > tmp/input1.pipe");
 }
+
+BOOST_AUTO_TEST_SUITE_END()
