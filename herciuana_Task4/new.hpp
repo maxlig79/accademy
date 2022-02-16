@@ -10,7 +10,7 @@ public:
     Timer() : StartTime{std::chrono::steady_clock::now()}
     {
     }
-    void Start(std::string str = "")
+    void calculateTime(std::string str = "")
     {
         auto end = std::chrono::steady_clock::now();
         auto difference = end - StartTime;

@@ -51,11 +51,11 @@ int main(int argc, char **argv)
             }
         }
     }
-    t1.Start("New image:");
+    t1.calculateTime("New image:");
     Timer t2;
     cv::Mat foreach_image = BrightnessContrast(image, contrast, brightness);
 
-    t2.Start("Foreach: ");
+    t2.calculateTime("Foreach: ");
 
     cv::namedWindow("Ana image", cv::WINDOW_AUTOSIZE);
     cv::namedWindow("New image", cv::WINDOW_AUTOSIZE);
