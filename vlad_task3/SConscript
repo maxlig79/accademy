@@ -1,5 +1,10 @@
+from subprocess import check_output
 env = Environment()
 env.Append(CXXFLAGS=["-std=c++17", "-g"], CPPPATH=["include"], LIBS=["rt", "pthread"])
-proxy_base_lib = env.Library("proxy_base",["src/ProxyBase.cpp"])
-env.Program("main_server", ["main_server.cpp", "src/DynamicArray.cpp", "src/ServerProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
-env.Program("main_client",["main_client.cpp", "src/ClientProxyObject.cpp"], LIBS=[proxy_base_lib, "$LIBS"])
+
+test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
+test_lib = File(test_lib.decode())
+
+env.Program("main_server", ["main_server.cpp", "src/ProxyBase.cpp", "src/ServerProxyObject.cpp", "src/DynamicArray.cpp"])
+env.Program("main_client",["main_client.cpp", "src/ProxyBase.cpp", "src/ClientProxyObject.cpp"])
+env.Program("test", ["DynamicArrayProxyTest.cpp", "src/ProxyBase.cpp", "src/ClientProxyObject.cpp", "src/ServerProxyObject.cpp", "src/DynamicArray.cpp"], LIBS=[test_lib, "$LIBS"])
