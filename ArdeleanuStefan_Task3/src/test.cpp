@@ -11,9 +11,6 @@ BOOST_AUTO_TEST_SUITE(ClientServerIPCTest)
 BOOST_AUTO_TEST_CASE(test_1)
 {
     system("./src/script.sh ");
-    system("echo 'add;unu\nget;0\ndelete;doi' > tmp/input.pipe");
-    system("echo 'add;doi\nget;1\ndelete;doi' > tmp/input1.pipe");
-
     std::string output;
     int count = 0;
     while (std::getline(client1, output))
@@ -37,7 +34,7 @@ BOOST_AUTO_TEST_CASE(test_1)
 
         count++;
     }
-
+    BOOST_CHECK(count == 3);
     count = 0;
     while (std::getline(client2, output)){
         switch (count)
@@ -59,9 +56,7 @@ BOOST_AUTO_TEST_CASE(test_1)
 
         count++;
     }
-
-    system("echo 'exit' > tmp/input.pipe");
-    system("echo 'exit' > tmp/input1.pipe");
+    BOOST_CHECK(count == 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
