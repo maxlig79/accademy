@@ -7,4 +7,4 @@ test_lib = File(test_lib.decode())
 
 env.Program("main_server", ["main_server.cpp", "src/ProxyBase.cpp", "src/ServerProxyObject.cpp", "src/DynamicArray.cpp"])
 env.Program("main_client",["main_client.cpp", "src/ProxyBase.cpp", "src/ClientProxyObject.cpp"])
-env.Program("test", ["DynamicArrayProxyTest.cpp", "src/ProxyBase.cpp", "src/ClientProxyObject.cpp", "src/ServerProxyObject.cpp", "src/DynamicArray.cpp"], LIBS=[test_lib, "$LIBS"])
+env.Program("test", ["DynamicArrayProxyTest.cpp", "src/ProxyBase.cpp", "src/ClientProxyObject.cpp", "src/ServerProxyObject.cpp", "src/DynamicArray.cpp"], LIBS=[test_lib, "tbb", "$LIBS"])
