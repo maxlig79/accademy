@@ -39,3 +39,4 @@ build/
 *.gcda
 *.gcno
 
+*.log

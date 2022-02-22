@@ -35,6 +35,7 @@ namespace client
     void ClientProxyObject::exit()
     {
         boost::interprocess::scoped_lock<boost::interprocess::named_mutex> lk(*proc_mutex);
+        boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> mem_lk(*mem_mutex);
         int code = EXIT;
         if (!getServerAvailable())
         {
@@ -42,6 +43,7 @@ namespace client
         }
         setId(id);
         mq->send(&code, sizeof(int), 0);
+        cond->wait(mem_lk);
     }
 
     std::string ClientProxyObject::get(int index, bool &has_string)
