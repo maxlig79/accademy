@@ -29,7 +29,9 @@ struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
     int clientID;
-};
+} msgCmd;
+
+//auto msgClient = std::to_string(msgCmd.clientID);
 
 const std::string MUTEX_IPC("academy_ipc_task_Mutex");
 
@@ -81,6 +83,7 @@ const std::map<const std::string, const CommandIds> COMMAND_TO_ID{
 };
 
 using CommandPair = std::pair<CommandIds, std::string>;
+
 const CommandPair split_command(const std::string &command)
 {
     // BONUS TASK: Make this function (much) better!
