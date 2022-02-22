@@ -71,7 +71,8 @@ enum class CommandIds : int
     EXIT,
     ADD,
     DELETE,
-    GET
+    GET,
+    NEWLINE
 };
 
 const std::map<const std::string, const CommandIds> COMMAND_TO_ID{
