@@ -127,20 +127,20 @@ BOOST_FIXTURE_TEST_CASE(DynamicArrayProxy_multiple_clients, Fixture)
         std::string fmt;
 
         // msg = (boost::format("arr[%d]=\"str1%d\"") % i % i).str();
-        fmt = "arr[%d]=\"str%d_%d\"";
+        fmt = "arr[%*d]=\"str%d_%d\"";
         int idx, client, val;
 
         fgets(line, sizeof(line), client1.get());
         // std::cout << line;
         trim(line);
-        sscanf(line, fmt.c_str(), &idx, &client, &val);
+        sscanf(line, fmt.c_str(), &client, &val);
         res[client - 1][val] = 1;
         memset(line, 0, sizeof(line));
 
         fgets(line, sizeof(line), client2.get());
         // std::cout << line;
         trim(line);
-        sscanf(line, fmt.c_str(), &idx, &client, &val);
+        sscanf(line, fmt.c_str(), &client, &val);
         res[client - 1][val] = 1;
         memset(line, 0, sizeof(line));
     }
