@@ -28,6 +28,7 @@ typedef basic_string<char, std::char_traits<char>, CharAllocator> SharedStringIp
 typedef allocator<SharedStringIpc, managed_shared_memory::segment_manager> StringAllocator;
 typedef vector<SharedStringIpc, StringAllocator> SharedStringVector;
 
+
 struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};

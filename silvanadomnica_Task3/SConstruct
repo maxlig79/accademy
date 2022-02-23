@@ -7,3 +7,5 @@ env.Append(LIBS=['librt', 'pthread'])
 
 env.Program(target = "server", source = ["server.cpp", "DynamicStringArray.cpp"], LIBS= ["librt", "pthread"])
 env.Program(target = "client", source = ["client.cpp"], LIBS= ["librt", "pthread"])
+env.Program(target = "test", source = ["TestServerClient.cpp","DynamicStringArray.o"], LIBS= ["librt", "pthread","boost_unit_test_framework"])
+
