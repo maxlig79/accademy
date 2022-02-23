@@ -5,13 +5,12 @@
 #include <boost/asio.hpp>
 #include "common.h"
 #include <boost/interprocess/allocators/allocator.hpp>
-#include "DynamicStringArray.hpp"
 
 using namespace boost::interprocess;
 
 int main()
 {
-  int nr_clients;
+  int nr_clients=0;
   MessageQueueRequest MQR;
   DynamicStringArray dynamicArray;
   typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
@@ -31,13 +30,16 @@ int main()
     do
     {
       mq.receive(&MQR, MAX_MESSAGE_SIZE, recv_size, priority);
+      //cout<<"try to aquire mutex"<<MQR.ID_Client<<std::endl;
+      scoped_lock<interprocess_mutex> lock(*mutex);
+      //cout<<"Mutex aquired"<<MQR.ID_Client<<std::endl;
       if (ClientArray.find(MQR.ID_Client) == ClientArray.end())
       {
         ClientArray.insert(std::make_pair(MQR.ID_Client, std::make_unique<DynamicStringArray>()));
         nr_clients++;
       }
       CommandPair commandPair = split_command(MQR.command);
-      scoped_lock<interprocess_mutex> lock(*mutex);
+      
       switch (commandPair.first)
       {
       case CommandIds::HELP:
@@ -49,6 +51,7 @@ int main()
       {
         if (nr_clients == 1)
         {
+          //std::cout<<"nr_client:"<<nr_clients<<endl;
           message_queue::remove(MESSAGE_QUEUE_NAME.c_str());
           shared_memory_object::remove(SHARED_MEMORY_NAME.c_str());
         }
