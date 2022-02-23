@@ -10,15 +10,26 @@ cv::Mat addBrightnessContrast(const cv::Mat &image, double contrast, double brig
 {
     cv::Mat newImage = image.clone();
     std::for_each(std::execution::par,
-                   newImage.begin<cv::Vec3b>(),
-                   newImage.end<cv::Vec3b>(),
-                   [newImage,contrast,brightness](cv::Vec3b &rgb)
-                   {
-                       for (int c = 0; c < newImage.channels(); c++)
-                       {
-                           rgb[c] = cv::saturate_cast<uchar>(contrast * rgb[c] + brightness);
-                       }
-                   });
+                  newImage.begin<cv::Vec3b>(),
+                  newImage.end<cv::Vec3b>(),
+                  [newImage, contrast, brightness](cv::Vec3b &rgb)
+                  {
+                      for (int c = 0; c < newImage.channels(); c++)
+                      {
+                          rgb[c] = cv::saturate_cast<uchar>(contrast * rgb[c] + brightness);
+                      }
+                  });
+    return newImage;
+}
+cv::Mat addBrightnessContrastParalellOpenCV(const cv::Mat &image, double contrast, double brightness)
+{
+    cv::Mat newImage = image.clone();
+    cv::parallel_for_(cv::Range(0, newImage.rows*newImage.cols), [&](cv::Vec3b &rgb){
+        for (int c = 0; c < newImage.channels(); c++)
+                      {
+                          rgb[c] = cv::saturate_cast<uchar>(contrast * rgb[c] + brightness);
+                      }
+    });
     return newImage;
 }
 int main(int argc, char **argv)
@@ -56,6 +67,10 @@ int main(int argc, char **argv)
     Timer timer2;
     cv::Mat foreachImage = addBrightnessContrast(image, contrast, brightness);
     timer2.ShowResult("For each: ");
+
+    Timer timer3;
+
+    timer3.ShowResult("Opencv: ");
 
     cv::namedWindow("Lenna image", cv::WINDOW_AUTOSIZE);
     cv::namedWindow("Simple image", cv::WINDOW_AUTOSIZE);
