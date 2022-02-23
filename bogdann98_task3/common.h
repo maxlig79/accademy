@@ -13,7 +13,6 @@ struct MessageQueueRequest
 {
     char command[MAX_COMMAND_LENGTH]{};
     int client;
-    
 };
 
 const std::string MESSAGE_QUEUE_NAME("academy_ipc_task_mq");
@@ -41,12 +40,11 @@ const std::string DELETE_COMMAND("delete");
 const std::string GET_COMMAND("get");
 
 const std::map<const std::string, const std::string> COMMAND_TO_HELP{
-        std::make_pair(HELP_COMMAND, "Print help"), 
-        std::make_pair(EXIT_COMMAND, "Exit application"), 
-        std::make_pair(ADD_COMMAND, "Add new element to DynamicStringList"), 
-        std::make_pair(DELETE_COMMAND, "Delete element from DynamicStringList"), 
-        std::make_pair(GET_COMMAND, "Get element from DynamicStringList")
-    };
+    std::make_pair(HELP_COMMAND, "Print help"),
+    std::make_pair(EXIT_COMMAND, "Exit application"),
+    std::make_pair(ADD_COMMAND, "Add new element to DynamicStringList"),
+    std::make_pair(DELETE_COMMAND, "Delete element from DynamicStringList"),
+    std::make_pair(GET_COMMAND, "Get element from DynamicStringList")};
 
 enum class CommandIds : int
 {
@@ -58,12 +56,11 @@ enum class CommandIds : int
 };
 
 const std::map<const std::string, const CommandIds> COMMAND_TO_ID{
-        std::make_pair(HELP_COMMAND, CommandIds::HELP), 
-        std::make_pair(EXIT_COMMAND, CommandIds::EXIT), 
-        std::make_pair(ADD_COMMAND, CommandIds::ADD), 
-        std::make_pair(DELETE_COMMAND, CommandIds::DELETE), 
-        std::make_pair(GET_COMMAND, CommandIds::GET)
-};
+    std::make_pair(HELP_COMMAND, CommandIds::HELP),
+    std::make_pair(EXIT_COMMAND, CommandIds::EXIT),
+    std::make_pair(ADD_COMMAND, CommandIds::ADD),
+    std::make_pair(DELETE_COMMAND, CommandIds::DELETE),
+    std::make_pair(GET_COMMAND, CommandIds::GET)};
 
 using CommandPair = std::pair<CommandIds, std::string>;
 
@@ -72,7 +69,7 @@ const CommandPair split_command(const std::string &command)
     // BONUS TASK: Make this function (much) better!
 
     CommandPair out;
-    if ((command == HELP_COMMAND) || (command == EXIT_COMMAND) )
+    if ((command == HELP_COMMAND) || (command == EXIT_COMMAND))
     {
         const auto commandID = COMMAND_TO_ID.find(command);
         out.first = commandID->second;
@@ -86,13 +83,13 @@ const CommandPair split_command(const std::string &command)
 
         if (strs.size() != 2)
             throw std::out_of_range("Expected 'command;value' pair");
-    
+
         const auto commandID = COMMAND_TO_ID.find(strs[0]);
         if (commandID == COMMAND_TO_ID.end())
         {
             throw std::invalid_argument("received command does not exist");
         }
-        
+
         out.first = commandID->second;
         out.second = strs[1];
     }
