@@ -26,29 +26,36 @@ void DynamicStringArray::addEntry(const string &String)
 // the function boolean should search dynamicArray for the string
 bool DynamicStringArray::deleteEntry(const string &String)
 {
-    bool found = 0;
-    if (dynamicArray[0] == String && size == 1)
+    bool found = false;
+    string *temp = nullptr;
+    for (int i = 0; i < size; i++)
     {
-        delete[] dynamicArray;
-        size--;
-        found = 1;
-    }
-    if (dynamicArray[0] == String && size > 1)
-    {
-        string *temp = new string[size - 1];
-        int j = 0;
-        for (int i = 0; i < size; i++)
+        if (dynamicArray[i] == String)
         {
-            if (dynamicArray[i] != String)
+            found = true;
+            break;
+        }
+    }
+    if (found)
+    {
+        if (size > 1)
+        {
+            temp = new string[size - 1];
+            int j = 0;
+            for (int i = 0; i < size; i++)
+            {
+                if (dynamicArray[i] == String)
+                {
+                    continue;
+                }
                 temp[j] = dynamicArray[i];
-            j++;
+                j++;
+            }
         }
         delete[] dynamicArray;
         dynamicArray = temp;
         size--;
-        found = 1;
     }
-
     return found;
 }
 string *DynamicStringArray::getEntry(const int index)
@@ -103,7 +110,13 @@ DynamicStringArray &DynamicStringArray::operator=(const DynamicStringArray &obj)
     }
     return *this;
 }
-
+// move ctor
+DynamicStringArray::DynamicStringArray(DynamicStringArray &&obj) : size{obj.size}, dynamicArray{obj.dynamicArray}
+{
+    obj.size = 0;
+    obj.dynamicArray = nullptr;
+}
+// move operator
 DynamicStringArray &DynamicStringArray::operator=(DynamicStringArray &&obj)
 {
     if (&obj != this)
