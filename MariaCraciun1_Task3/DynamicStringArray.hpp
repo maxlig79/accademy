@@ -4,7 +4,8 @@
 #include<string>
 #include<vector>
 
-class DynamicStringArray {
+class DynamicStringArray 
+{
 private:
     int size ;
     std::string *dynamicArray ;
