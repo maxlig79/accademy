@@ -1,14 +1,24 @@
 #pragma once
-
+#include <iostream>
 #include <stddef.h>
 #include <vector>
 #include <string>
 #include <utility>
 #include <boost/algorithm/string.hpp>
-#include <boost/interprocess/managed_xsi_shared_memory.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
 #include <map>
-
+#include <boost/interprocess/containers/vector.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/ipc/message_queue.hpp>
+#include <boost/interprocess/containers/map.hpp>
+#include <boost/asio.hpp>
+#include <chrono>
+#include <thread>
+#include "DynamicStringArray.hpp"
 constexpr size_t MAX_COMMAND_LENGTH = 100;
+typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager> CharAllocator;
+typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> stringIpc;
 
 struct MessageQueueRequest
 {

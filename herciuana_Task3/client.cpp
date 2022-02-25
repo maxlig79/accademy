@@ -27,11 +27,15 @@ int main()
     while (strcmp(MQR.command, "exit") != 0)
     {
       cout<<"Insert command:"<<endl;
-      cin >> MQR.command;
+      //cin >> MQR.command;
+      cin.getline(MQR.command,100);
+      //cout<<"try to aquire mutex"<<MQR.ID_Client<<std::endl;
+      scoped_lock<interprocess_mutex> lock(*mutex);
+      //cout<<"Mutex aquired"<<MQR.ID_Client<<std::endl;
       MQR.ID_Client = getpid();
       mq.send(&MQR, MAX_MESSAGE_SIZE, 0);
       CommandPair commandPair = split_command(MQR.command);
-      scoped_lock<interprocess_mutex> lock(*mutex);
+      
       condition->wait(lock);
       switch (commandPair.first)
       {
