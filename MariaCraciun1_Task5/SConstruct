@@ -1,0 +1,6 @@
+from SCons.Environment import Environment
+
+env=Environment()
+env.Append(CPPFlags=['-g', '-fprofile-arcs', '-ftest-coverage'])
+env.Program(target= 'main', source= ['main.cpp', 'DynamicArray.cpp'], LIBS=['gcov'])
+env.Program(target= 'BoostTest', source= ['BoostTest.cpp', 'DynamicArray.o'], LIBS=['gcov', 'boost_unit_test_framework'])
