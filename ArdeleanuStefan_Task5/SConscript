@@ -1,0 +1,8 @@
+from SCons.Environment import Environment
+# This is a comment
+env = Environment(
+    CCFLAGS=["-ftest-coverage", "-fprofile-arcs", "-O0", "-g"],
+    CPPPATH=['include'],
+    LIBS=['gcov'],
+    LIBPATH='build')
+tests = env.Program(target="test", source=["src/Test.cpp"], LIBS=['boost_unit_test_framework','gcov'])
