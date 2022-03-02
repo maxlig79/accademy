@@ -3,25 +3,16 @@ from subprocess import check_output
 #If test is enabled, make the test executable and the library with test flags
 #otherwise just build the library without the test flags
 
-test = ARGUMENTS.get("test", 0)
 test_env = Environment(CXXFLAGS=["-ftest-coverage","-fprofile-arcs","-g", "--no-elide-constructors"])
-if test:
-    env = test_env.Clone()
-else:
-    env = Environment()
+env = test_env.Clone()
+
 
 env.Append(CXXFLAGS=["-std=c++17"], CPPPATH=["include"])
-target_sources = Glob("src/*.cpp")
+#target_sources = Glob("src/*.cpp")
 
-lib = env.Library("dynamic_array", target_sources)
+#lib = env.Library("dynamic_array", target_sources)
 
-if test:
-    test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
-    test_lib = File(test_lib.decode())
-    test_sources = Glob("test/*.cpp")
-    env.Program("test_arr", test_sources, LIBS=[test_lib, lib, "gcov"], CXXFLAGS=["--no-elide-constructors"])
-
-main_libs = [lib]
-if test:
-    main_libs.append("gcov")
-    
+test_lib = check_output(["locate", "boost_unit_test_framework.a"]).rstrip()
+test_lib = File(test_lib.decode())
+test_sources = Glob("test/*.cpp")
+env.Program("test_arr", test_sources, LIBS=[test_lib, "gcov"], CXXFLAGS=["--no-elide-constructors"])
