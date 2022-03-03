@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
+#include <stdexcept>
+#include <iostream>
 
 using std::string;
 using std::vector;
 
-template<typename T> 
+template <typename T>
 class DynamicArray
 {
 private:
@@ -15,13 +17,13 @@ public:
     DynamicArray();
     int getSize() const;
     void addEntry(const T &newInput);
-    bool deleteEntry(const string &newInput);
-    string getEntry(const int index) const;
+    bool deleteEntry(const T &newInput);
+    T *getEntry(const int &index) const;
     DynamicArray(const DynamicArray &obj);
-    DynamicArray& operator=(const DynamicArray &obj); 
+    DynamicArray &operator=(const DynamicArray &obj);
     ~DynamicArray();
     DynamicArray(DynamicArray &&other);
-    DynamicArray& operator=(DynamicArray &&other);
+    DynamicArray &operator=(DynamicArray &&other);
     DynamicArray(const vector<string> &obj);
 };
 template <typename T>
@@ -32,6 +34,31 @@ template <typename T>
 int DynamicArray<T>::getSize() const
 {
     return size;
+}
+template <>
+void DynamicArray<std::string>::addEntry(const std::string &newInput)
+{
+    try
+    {
+        if (newInput == "")
+        {
+            throw std::invalid_argument("Cannot add an empty string");
+        }
+
+        string *newArray = new string[size + 1];
+        for (int i = 0; i < size; i++)
+        {
+            newArray[i] = dynamicArray[i];
+        }
+        newArray[size] = newInput;
+        delete[] dynamicArray;
+        dynamicArray = newArray;
+        size++;
+    }
+    catch (const std::invalid_argument &e)
+    {
+        std::cout << e.what() << '\n';
+    }
 }
 template <typename T>
 void DynamicArray<T>::addEntry(const T &newInput)
@@ -47,7 +74,7 @@ void DynamicArray<T>::addEntry(const T &newInput)
     size++;
 }
 template <class T>
-bool DynamicArray<T>::deleteEntry(const string &newInput)
+bool DynamicArray<T>::deleteEntry(const T &newInput)
 {
     bool found = false;
     int i;
@@ -61,8 +88,8 @@ bool DynamicArray<T>::deleteEntry(const string &newInput)
     }
     if (found == true)
     {
-        std::string *temp = dynamicArray;
-        dynamicArray = new std::string[size - 1];
+        T *temp = dynamicArray;
+        dynamicArray = new T[size - 1];
         for (int j; j < size; j++)
         {
             if (j < i)
@@ -79,34 +106,42 @@ bool DynamicArray<T>::deleteEntry(const string &newInput)
 
     return found;
 }
-template <class T>
-string DynamicArray<T>::getEntry(const int index) const
+template <typename T>
+T *DynamicArray<T>::getEntry(const int &index) const
 {
-    if (index >= size)
+    try
     {
-        return "";
+        if (index >= size || index < 0)
+        {
+            throw std::out_of_range("The index is out of bound");
+        }
+        else
+        {
+            return &dynamicArray[index];
+        }
     }
-    else
+    catch (const std::out_of_range &e)
     {
-        return dynamicArray[index];
+        std::cout << e.what() << '\n';
+        return nullptr;
     }
 }
-template <class T>
+template <typename T>
 DynamicArray<T>::DynamicArray(const DynamicArray &obj)
 {
     size = obj.getSize();
-    dynamicArray = new string[size];
+    dynamicArray = new T[size];
     for (int i = 0; i < size; i++)
     {
-        dynamicArray[i] = obj.getEntry(i);
+        dynamicArray[i] = obj.dynamicArray[i];
     }
 }
-template <class T>
+template <typename T>
 DynamicArray<T>::~DynamicArray()
 {
     delete[] dynamicArray;
 }
-template <class T>
+template <typename T>
 DynamicArray<T> &DynamicArray<T>::operator=(const DynamicArray &obj)
 {
     if (&obj != this)
@@ -121,13 +156,13 @@ DynamicArray<T> &DynamicArray<T>::operator=(const DynamicArray &obj)
     }
     return *this;
 }
-template <class T>
+template <typename T>
 DynamicArray<T>::DynamicArray(DynamicArray &&other) : size(other.size), dynamicArray(other.dynamicArray)
 {
     other.dynamicArray = nullptr;
     other.size = 0;
 }
-template <class T>
+template <typename T>
 DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray &&other)
 {
     if (this != &other)
@@ -140,7 +175,7 @@ DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray &&other)
     }
     return *this;
 }
-template <class T>
+template <typename T>
 DynamicArray<T>::DynamicArray(const vector<string> &obj) : DynamicArray()
 {
     for (auto i : obj)
