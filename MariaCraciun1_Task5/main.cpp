@@ -2,16 +2,18 @@
 
 int main()
 {
-    DynamicArray < std::string >  obj;
-    obj.addEntry ( "Ana" );
-    obj.addEntry ( "are" );
-    obj.addEntry ( "mere" );
-    if ( obj.deleteEntry ( "mere" ) != true && obj.getLength() != 2 )
+    DynamicArray < int >  obj;
+    obj.addEntry ( 1 );
+    obj.addEntry ( 2 );
+    obj.addEntry ( 3 );
+    obj.deleteEntry ( 2 );
+    
+    if ( obj.getLength() == 2 )
     {
-        std::cout << "Deletion failed" ;
+        std::cout << "Deletion succeded";
     }
     else 
     {
-        std::cout << "Deletion succeded" << std::endl << obj.getLength() ;
+        std::cout << "Deletion failed" ;
     }
 }
