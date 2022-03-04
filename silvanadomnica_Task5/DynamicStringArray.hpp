@@ -38,27 +38,20 @@ int DynamicArray<T>::getSize() const
 template <>
 void DynamicArray<std::string>::addEntry(const std::string &newInput)
 {
-    try
+    if (newInput == "")
     {
-        if (newInput == "")
-        {
-            throw std::invalid_argument("Cannot add an empty string");
-        }
+        throw std::invalid_argument("Cannot add an empty string");
+    }
 
-        string *newArray = new string[size + 1];
-        for (int i = 0; i < size; i++)
-        {
-            newArray[i] = dynamicArray[i];
-        }
-        newArray[size] = newInput;
-        delete[] dynamicArray;
-        dynamicArray = newArray;
-        size++;
-    }
-    catch (const std::invalid_argument &e)
+    string *newArray = new string[size + 1];
+    for (int i = 0; i < size; i++)
     {
-        std::cout << e.what() << '\n';
+        newArray[i] = dynamicArray[i];
     }
+    newArray[size] = newInput;
+    delete[] dynamicArray;
+    dynamicArray = newArray;
+    size++;
 }
 template <typename T>
 void DynamicArray<T>::addEntry(const T &newInput)
@@ -77,8 +70,7 @@ template <class T>
 bool DynamicArray<T>::deleteEntry(const T &newInput)
 {
     bool found = false;
-    int i;
-    for (i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
     {
         if (newInput == dynamicArray[i])
         {
@@ -86,21 +78,22 @@ bool DynamicArray<T>::deleteEntry(const T &newInput)
             break;
         }
     }
+    T *temp = nullptr;
     if (found == true)
     {
-        T *temp = dynamicArray;
-        dynamicArray = new T[size - 1];
-        for (int j; j < size; j++)
+        temp = new T[size - 1];
+        int j = 0;
+        for (int i = 0; i < size; i++)
         {
-            if (j < i)
+            if (dynamicArray[i] == newInput)
             {
-                dynamicArray[j] = temp[j];
+                continue;
             }
-            else if (j > i)
-            {
-                dynamicArray[j - 1] = temp[j];
-            }
+            temp[j] = dynamicArray[i];
+            j++;
         }
+        delete[] dynamicArray;
+        dynamicArray = temp;
         size--;
     }
 
@@ -109,21 +102,13 @@ bool DynamicArray<T>::deleteEntry(const T &newInput)
 template <typename T>
 T *DynamicArray<T>::getEntry(const int &index) const
 {
-    try
+    if (index >= size || index < 0)
     {
-        if (index >= size || index < 0)
-        {
-            throw std::out_of_range("The index is out of bound");
-        }
-        else
-        {
-            return &dynamicArray[index];
-        }
+        throw std::out_of_range("The index is out of bound");
     }
-    catch (const std::out_of_range &e)
+    else
     {
-        std::cout << e.what() << '\n';
-        return nullptr;
+        return &dynamicArray[index];
     }
 }
 template <typename T>

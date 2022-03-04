@@ -14,6 +14,7 @@ BOOST_AUTO_TEST_CASE(test_string)
     BOOST_CHECK_EQUAL(*arrayString.getEntry(1), "bonjour");
     arrayString.deleteEntry("buna");
     BOOST_CHECK(arrayString.getSize() == 2);
+    BOOST_CHECK_THROW(arrayString.addEntry(""),std::invalid_argument);
 }
 BOOST_AUTO_TEST_CASE(test_int)
 {
@@ -27,6 +28,7 @@ BOOST_AUTO_TEST_CASE(test_int)
     BOOST_CHECK_EQUAL(*arrayInt.getEntry(1), 467);
     arrayInt.deleteEntry(1);
     BOOST_CHECK(arrayInt.getSize() == 3);
+    BOOST_CHECK_THROW(*arrayInt.getEntry(9) == 872,std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(test_double)
