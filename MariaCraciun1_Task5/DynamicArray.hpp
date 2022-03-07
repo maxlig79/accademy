@@ -102,26 +102,20 @@ void DynamicArray < T > ::addEntry (const T &input )
 template<>
 void DynamicArray < std::string > ::addEntry (const std::string &input ) 
 {
-    try
+
+    if (input == "")
     {
-        if (input == "")
-        {
-            throw std::invalid_argument("Non-empty string expected as input.");
-        }
-        std::string *tempArray = new std::string[size+1] ;
-        for(int i = 0; i < size; i++ ) 
-        {
-            tempArray[i] = dynamicArray[i] ; 
-        }
-        tempArray[size] = input ;
-        size++ ;
-        delete[] dynamicArray;
-        dynamicArray = tempArray ;
+        throw std::invalid_argument("Non-empty string expected as input.");
     }
-    catch(const std::invalid_argument& e)
+    std::string *tempArray = new std::string[size+1] ;
+    for(int i = 0; i < size; i++ ) 
     {
-        std::cout << e.what() << '\n';
+        tempArray[i] = dynamicArray[i] ; 
     }
+    tempArray[size] = input ;
+    size++ ;
+    delete[] dynamicArray;
+    dynamicArray = tempArray ;
 }
 
 template <typename T>
@@ -164,21 +158,13 @@ bool DynamicArray < T >::deleteEntry (const T &input)
 template <typename T>
 T *DynamicArray < T > ::getEntry ( const int index ) 
 {  
-        try
+    if (index < 0 || index >= size)
     {
-        if (index < 0 || index >= size)
-        {
-            throw std::out_of_range ( "Index is out of range" );
-        }
-        else
-        {
-            return &dynamicArray[index];
-        }
+        throw std::out_of_range ( "Index is out of range" );
     }
-    catch(const std::out_of_range& e)
+    else
     {
-        std::cout << e.what() << '\n';
-        return nullptr;
+        return &dynamicArray[index];
     }
 }
 
