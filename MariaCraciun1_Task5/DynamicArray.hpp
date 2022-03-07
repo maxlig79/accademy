@@ -81,7 +81,9 @@ DynamicArray < T > &DynamicArray < T >::operator = ( DynamicArray < T >  &&obj)
 
 template <typename T>
 int DynamicArray < T > ::getLength () const 
-{ return size; }
+{ 
+    return size; 
+}
 
 template <typename T>
 void DynamicArray < T > ::addEntry (const T &input ) 
