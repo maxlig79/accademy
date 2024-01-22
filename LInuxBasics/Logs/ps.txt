@@ -1,0 +1,225 @@
+Exercitiul 1.
+
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ touch pslogfiles.log
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ echo "Log entry 1: This is a sample log message" >> example.log
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ echo "Log entry 1: This is a sample log message" >> pslogfiles.log
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ echo "Log entry 2: Another log message" >> pslogfiles.log 
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ ps aux >> pslogfiles.log
+projectx@projectx:~/Desktop/Linux-basics/linux-exercises$ ps aux 
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.2 169008 11296 ?        Ss   ian21   0:04 /sbin/init splash
+root           2  0.0  0.0      0     0 ?        S    ian21   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   ian21   0:00 [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   ian21   0:00 [rcu_par_gp]
+root           5  0.0  0.0      0     0 ?        I<   ian21   0:00 [slub_flushwq]
+root           6  0.0  0.0      0     0 ?        I<   ian21   0:00 [netns]
+root           8  0.0  0.0      0     0 ?        I<   ian21   0:00 [kworker/0:0H-events_highpri]
+root          10  0.0  0.0      0     0 ?        I<   ian21   0:00 [mm_percpu_wq]
+root          11  0.0  0.0      0     0 ?        S    ian21   0:00 [rcu_tasks_rude_]
+root          12  0.0  0.0      0     0 ?        S    ian21   0:00 [rcu_tasks_trace]
+root          13  0.0  0.0      0     0 ?        S    ian21   0:00 [ksoftirqd/0]
+root          14  0.0  0.0      0     0 ?        I    ian21   0:13 [rcu_sched]
+root          15  0.0  0.0      0     0 ?        S    ian21   0:00 [migration/0]
+root          16  0.0  0.0      0     0 ?        S    ian21   0:00 [idle_inject/0]
+root          18  0.0  0.0      0     0 ?        S    ian21   0:00 [cpuhp/0]
+root          19  0.0  0.0      0     0 ?        S    ian21   0:00 [cpuhp/1]
+root          20  0.0  0.0      0     0 ?        S    ian21   0:00 [idle_inject/1]
+root          21  0.0  0.0      0     0 ?        S    ian21   0:00 [migration/1]
+root          22  0.0  0.0      0     0 ?        S    ian21   0:00 [ksoftirqd/1]
+root          24  0.0  0.0      0     0 ?        I<   ian21   0:00 [kworker/1:0H-events_highpri]
+root          25  0.0  0.0      0     0 ?        S    ian21   0:00 [cpuhp/2]
+root          26  0.0  0.0      0     0 ?        S    ian21   0:00 [idle_inject/2]
+root          27  0.0  0.0      0     0 ?        S    ian21   0:00 [migration/2]
+root          28  0.0  0.0      0     0 ?        S    ian21   0:00 [ksoftirqd/2]
+root          30  0.0  0.0      0     0 ?        I<   ian21   0:00 [kworker/2:0H-kblockd]
+root          31  0.0  0.0      0     0 ?        S    ian21   0:00 [cpuhp/3]
+root          32  0.0  0.0      0     0 ?        S    ian21   0:00 [idle_inject/3]
+root          33  0.0  0.0      0     0 ?        S    ian21   0:00 [migration/3]
+root          34  0.0  0.0      0     0 ?        S    ian21   0:00 [ksoftirqd/3]
+root          36  0.0  0.0      0     0 ?        I<   ian21   0:00 [kworker/3:0H-kblockd]
+root          37  0.0  0.0      0     0 ?        S    ian21   0:00 [kdevtmpfs]
+root          38  0.0  0.0      0     0 ?        I<   ian21   0:00 [inet_frag_wq]
+root          39  0.0  0.0      0     0 ?        S    ian21   0:00 [kauditd]
+root          40  0.0  0.0      0     0 ?        S    ian21   0:00 [khungtaskd]
+root          41  0.0  0.0      0     0 ?        S    ian21   0:00 [oom_reaper]
+root          42  0.0  0.0      0     0 ?        I<   ian21   0:00 [writeback]
+root          43  0.0  0.0      0     0 ?        S    ian21   0:10 [kcompactd0]
+root          44  0.0  0.0      0     0 ?        SN   ian21   0:00 [ksmd]
+root          45  0.0  0.0      0     0 ?        SN   ian21   0:00 [khugepaged]
+root          94  0.0  0.0      0     0 ?        I<   ian21   0:00 [kintegrityd]
+root          95  0.0  0.0      0     0 ?        I<   ian21   0:00 [kblockd]
+root          96  0.0  0.0      0     0 ?        I<   ian21   0:00 [blkcg_punt_bio]
+root          97  0.0  0.0      0     0 ?        I<   ian21   0:00 [tpm_dev_wq]
+root          98  0.0  0.0      0     0 ?        I<   ian21   0:00 [ata_sff]
+root          99  0.0  0.0      0     0 ?        I<   ian21   0:00 [md]
+root         100  0.0  0.0      0     0 ?        I<   ian21   0:00 [edac-poller]
+root         101  0.0  0.0      0     0 ?        I<   ian21   0:00 [devfreq_wq]
+root         102  0.0  0.0      0     0 ?        S    ian21   0:00 [watchdogd]
+root         104  0.0  0.0      0     0 ?        I<   ian21   0:01 [kworker/0:1H-kblockd]
+root         106  0.0  0.0      0     0 ?        S    ian21   0:04 [kswapd0]
+root         107  0.0  0.0      0     0 ?        S    ian21   0:00 [ecryptfs-kthrea]
+root         109  0.0  0.0      0     0 ?        I<   ian21   0:00 [kthrotld]
+root         110  0.0  0.0      0     0 ?        I<   ian21   0:00 [acpi_thermal_pm]
+root         112  0.0  0.0      0     0 ?        S    ian21   0:00 [scsi_eh_0]
+root         113  0.0  0.0      0     0 ?        I<   ian21   0:00 [scsi_tmf_0]
+root         114  0.0  0.0      0     0 ?        S    ian21   0:00 [scsi_eh_1]
+root         115  0.0  0.0      0     0 ?        I<   ian21   0:00 [scsi_tmf_1]
+root         117  0.0  0.0      0     0 ?        I<   ian21   0:00 [vfio-irqfd-clea]
+root         118  0.0  0.0      0     0 ?        I<   ian21   0:00 [mld]
+root         119  0.0  0.0      0     0 ?        I<   ian21   0:00 [ipv6_addrconf]
+root         123  0.0  0.0      0     0 ?        I<   ian21   0:01 [kworker/3:1H-kblockd]
+root         132  0.0  0.0      0     0 ?        I<   ian21   0:00 [kstrp]
+root         135  0.0  0.0      0     0 ?        I<   ian21   0:00 [zswap-shrink]
+root         136  0.0  0.0      0     0 ?        I<   ian21   0:00 [kworker/u9:0]
+root         141  0.0  0.0      0     0 ?        I<   ian21   0:00 [charger_manager]
+root         164  0.0  0.0      0     0 ?        I<   ian21   0:01 [kworker/1:1H-kblockd]
+root         191  0.0  0.0      0     0 ?        S    ian21   0:00 [scsi_eh_2]
+root         192  0.0  0.0      0     0 ?        I<   ian21   0:00 [scsi_tmf_2]
+root         217  0.0  0.0      0     0 ?        I<   ian21   0:01 [kworker/2:1H-kblockd]
+root         218  0.0  0.0      0     0 ?        S    ian21   0:02 [jbd2/sda5-8]
+root         219  0.0  0.0      0     0 ?        I<   ian21   0:00 [ext4-rsv-conver]
+root         259  0.0  0.4  51852 17512 ?        S<s  ian21   0:01 /lib/systemd/systemd-journald
+root         294  0.0  0.1  24188  6364 ?        Ss   ian21   0:00 /lib/systemd/systemd-udevd
+root         295  0.0  0.0      0     0 ?        I<   ian21   0:00 [ttm_swap]
+root         296  0.0  0.0      0     0 ?        S    ian21   0:04 [irq/18-vmwgfx]
+root         297  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc0]
+root         298  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc1]
+root         299  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc2]
+root         300  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc3]
+root         301  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc4]
+root         302  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc5]
+root         303  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc6]
+root         304  0.0  0.0      0     0 ?        S    ian21   0:00 [card0-crtc7]
+root         375  0.0  0.0      0     0 ?        I<   ian21   0:00 [iprt-VBoxWQueue]
+root         392  0.0  0.0      0     0 ?        I<   ian21   0:00 [cryptd]
+systemd+     674  0.0  0.2  24132  9736 ?        Ss   ian21   0:01 /lib/systemd/systemd-resolved
+systemd+     675  0.0  0.1  90224  4228 ?        Ssl  ian21   0:00 /lib/systemd/systemd-timesyncd
+root         705  0.0  0.1 241248  6564 ?        Ssl  ian21   0:01 /usr/lib/accountsservice/accoun
+root         706  0.0  0.0   2548   772 ?        Ss   ian21   0:00 /usr/sbin/acpid
+avahi        709  0.0  0.0   8532  3124 ?        Ss   ian21   0:00 avahi-daemon: running [projectx
+root         710  0.0  0.0  12288  2944 ?        Ss   ian21   0:00 /usr/sbin/cron -f
+message+     714  0.0  0.1   9804  6128 ?        Ss   ian21   0:10 /usr/bin/dbus-daemon --system -
+root         717  0.0  0.3 338908 13436 ?        Ssl  ian21   0:02 /usr/sbin/NetworkManager --no-d
+root         723  0.0  0.0  81836  3392 ?        Ssl  ian21   0:02 /usr/sbin/irqbalance --foregrou
+root         728  0.0  0.4  42568 18292 ?        Ss   ian21   0:00 /usr/bin/python3 /usr/bin/netwo
+root         731  0.0  0.2 244024  9792 ?        Ssl  ian21   0:00 /usr/lib/policykit-1/polkitd --
+syslog       736  0.0  0.1 224352  4284 ?        Ssl  ian21   0:00 /usr/sbin/rsyslogd -n -iNONE
+root         744  0.0  0.7 1541016 30056 ?       Ssl  ian21   0:14 /usr/lib/snapd/snapd
+root         745  0.0  0.1 238592  5508 ?        Ssl  ian21   0:00 /usr/libexec/switcheroo-control
+root         747  0.0  0.1  16748  6200 ?        Ss   ian21   0:00 /lib/systemd/systemd-logind
+root         748  0.0  0.2 393148 10016 ?        Ssl  ian21   0:00 /usr/lib/udisks2/udisksd
+root         750  0.0  0.0  13684  3156 ?        Ss   ian21   0:00 /sbin/wpa_supplicant -u -s -O /
+avahi        771  0.0  0.0   8348   300 ?        S    ian21   0:00 avahi-daemon: chroot helper
+root         801  0.0  0.1 314472  7328 ?        Ssl  ian21   0:00 /usr/sbin/ModemManager
+root         802  0.0  0.2 176484  8656 ?        Ssl  ian21   0:00 /usr/sbin/cups-browsed
+root         834  0.0  0.4 120980 19376 ?        Ssl  ian21   0:00 /usr/bin/python3 /usr/share/una
+root         843  0.0  0.1  31300  6124 ?        Ss   ian21   0:00 /usr/sbin/cupsd -l
+whoopsie     904  0.0  0.2 326876 10396 ?        Ssl  ian21   0:00 /usr/bin/whoopsie -f
+kernoops     908  0.0  0.0  11268   284 ?        Ss   ian21   0:01 /usr/sbin/kerneloops --test
+kernoops     916  0.0  0.0  11268   448 ?        Ss   ian21   0:01 /usr/sbin/kerneloops
+root        1091  0.0  0.1 242480  7304 ?        Ssl  ian21   0:00 /usr/sbin/gdm3
+root        1096  0.0  0.0 429432  2888 ?        Sl   ian21   0:09 /usr/sbin/VBoxService --pidfile
+root        1110  0.0  0.1 169824  7776 ?        Sl   ian21   0:00 gdm-session-worker [pam/gdm-aut
+projectx    1116  0.0  0.1  19172  7472 ?        Ss   ian21   0:04 /lib/systemd/systemd --user
+projectx    1119  0.0  0.0 103532  1780 ?        S    ian21   0:00 (sd-pam)
+projectx    1134  0.0  0.3 2198260 12344 ?       Ssl  ian21   0:04 /usr/bin/pulseaudio --daemonize
+projectx    1136  0.0  0.3 792696 12520 ?        SNsl ian21   0:01 /usr/libexec/tracker-miner-fs
+projectx    1140  0.0  0.1 390520  7436 ?        SLl  ian21   0:00 /usr/bin/gnome-keyring-daemon -
+projectx    1144  0.0  0.1 166888  5324 tty2     Ssl+ ian21   0:00 /usr/lib/gdm3/gdm-x-session --r
+projectx    1146  1.1  2.1 320908 86972 tty2     Rl+  ian21   6:52 /usr/lib/xorg/Xorg vt2 -display
+rtkit       1147  0.0  0.0 152936  2864 ?        SNsl ian21   0:00 /usr/libexec/rtkit-daemon
+projectx    1150  0.0  0.2  13228  9724 ?        Ss   ian21   0:05 /usr/bin/dbus-daemon --session 
+projectx    1157  0.0  0.1 242588  5388 ?        Ssl  ian21   0:00 /usr/libexec/gvfsd
+projectx    1172  0.0  0.1 378352  4468 ?        Sl   ian21   0:00 /usr/libexec/gvfsd-fuse /run/us
+projectx    1180  0.0  0.1 316924  7648 ?        Ssl  ian21   0:00 /usr/libexec/gvfs-udisks2-volum
+projectx    1187  0.0  0.1 319592  5880 ?        Ssl  ian21   0:02 /usr/libexec/gvfs-afc-volume-mo
+projectx    1193  0.0  0.1 238576  5040 ?        Ssl  ian21   0:00 /usr/libexec/gvfs-mtp-volume-mo
+projectx    1197  0.0  0.1 238748  4548 ?        Ssl  ian21   0:00 /usr/libexec/gvfs-goa-volume-mo
+projectx    1201  0.0  0.2 556172  9536 ?        Sl   ian21   0:00 /usr/libexec/goa-daemon
+projectx    1213  0.0  0.1 317624  5348 ?        Sl   ian21   0:00 /usr/libexec/goa-identity-servi
+projectx    1219  0.0  0.1 240852  4996 ?        Ssl  ian21   0:00 /usr/libexec/gvfs-gphoto2-volum
+root        1223  0.0  0.1 254984  7272 ?        Ssl  ian21   0:01 /usr/lib/upower/upowerd
+projectx    1230  0.0  0.2 191088  8540 tty2     Sl+  ian21   0:00 /usr/libexec/gnome-session-bina
+projectx    1313  0.0  0.0  25472    60 ?        S    ian21   0:00 /usr/bin/VBoxClient --clipboard
+projectx    1314  0.0  0.1 157740  6912 ?        Sl   ian21   0:00 /usr/bin/VBoxClient --clipboard
+projectx    1325  0.0  0.0  25472    80 ?        S    ian21   0:00 /usr/bin/VBoxClient --seamless
+projectx    1326  0.0  0.0 157708  1608 ?        Sl   ian21   0:00 /usr/bin/VBoxClient --seamless
+projectx    1332  0.0  0.0  25472    76 ?        S    ian21   0:00 /usr/bin/VBoxClient --draganddr
+projectx    1333  0.2  0.0 223760  3108 ?        Sl   ian21   1:35 /usr/bin/VBoxClient --draganddr
+projectx    1337  0.0  0.0  25472    52 ?        S    ian21   0:00 /usr/bin/VBoxClient --vmsvga
+projectx    1338  0.0  0.0 159988  1620 ?        Sl   ian21   0:00 /usr/bin/VBoxClient --vmsvga
+projectx    1347  0.0  0.0   6040    40 ?        Ss   ian21   0:00 /usr/bin/ssh-agent /usr/bin/im-
+projectx    1366  0.0  0.1 305424  4836 ?        Ssl  ian21   0:00 /usr/libexec/at-spi-bus-launche
+projectx    1371  0.0  0.0   7248  3584 ?        S    ian21   0:00 /usr/bin/dbus-daemon --config-f
+projectx    1396  0.0  0.0  92932  3096 ?        Ssl  ian21   0:00 /usr/libexec/gnome-session-ctl 
+projectx    1403  0.0  0.2 691880  9844 ?        Ssl  ian21   0:00 /usr/libexec/gnome-session-bina
+projectx    1418  3.3  8.3 5063540 335904 ?      Ssl  ian21  20:34 /usr/bin/gnome-shell
+projectx    1447  0.0  0.1 313948  6600 ?        Sl   ian21   0:00 ibus-daemon --panel disable --x
+projectx    1451  0.0  0.1 239400  5212 ?        Sl   ian21   0:00 /usr/libexec/ibus-dconf
+projectx    1452  0.0  0.4 278564 16704 ?        Sl   ian21   0:03 /usr/libexec/ibus-extension-gtk
+projectx    1454  0.0  0.2 200772 11016 ?        Sl   ian21   0:00 /usr/libexec/ibus-x11 --kill-da
+projectx    1456  0.0  0.1 239376  5568 ?        Sl   ian21   0:00 /usr/libexec/ibus-portal
+projectx    1469  0.0  0.1 162916  5832 ?        Sl   ian21   0:00 /usr/libexec/at-spi2-registryd 
+projectx    1473  0.0  0.1 238468  4888 ?        Ssl  ian21   0:00 /usr/libexec/xdg-permission-sto
+projectx    1475  0.0  0.2 581072  8904 ?        Sl   ian21   0:00 /usr/libexec/gnome-shell-calend
+projectx    1484  0.0  0.2 1073080 9648 ?        Ssl  ian21   0:00 /usr/libexec/evolution-source-r
+projectx    1493  0.0  0.2 1382236 11088 ?       Ssl  ian21   0:00 /usr/libexec/evolution-calendar
+projectx    1497  0.0  0.1 156352  4720 ?        Sl   ian21   0:00 /usr/libexec/dconf-service
+projectx    1512  0.0  0.2 676056  9288 ?        Ssl  ian21   0:00 /usr/libexec/evolution-addressb
+projectx    1531  0.0  0.2 2736580 10544 ?       Sl   ian21   0:00 /usr/bin/gjs /usr/share/gnome-s
+projectx    1539  0.0  0.1 316836  6372 ?        Sl   ian21   0:00 /usr/libexec/gvfsd-trash --spaw
+projectx    1550  0.0  0.1 312532  5264 ?        Ssl  ian21   0:00 /usr/libexec/gsd-a11y-settings
+projectx    1551  0.0  0.3 570796 12860 ?        Ssl  ian21   0:01 /usr/libexec/gsd-color
+projectx    1554  0.0  0.1 376484  7884 ?        Ssl  ian21   0:00 /usr/libexec/gsd-datetime
+projectx    1555  0.0  0.1 314600  6044 ?        Ssl  ian21   0:02 /usr/libexec/gsd-housekeeping
+projectx    1556  0.0  0.3 348748 15612 ?        Ssl  ian21   0:01 /usr/libexec/gsd-keyboard
+projectx    1560  0.0  0.4 691012 17580 ?        Ssl  ian21   0:01 /usr/libexec/gsd-media-keys
+projectx    1561  0.0  0.3 349172 13248 ?        Ssl  ian21   0:01 /usr/libexec/gsd-power
+projectx    1565  0.0  0.1 251092  7564 ?        Ssl  ian21   0:00 /usr/libexec/gsd-print-notifica
+projectx    1568  0.0  0.1 386240  5104 ?        Ssl  ian21   0:00 /usr/libexec/gsd-rfkill
+projectx    1576  0.0  0.1 238380  4704 ?        Ssl  ian21   0:00 /usr/libexec/gsd-screensaver-pr
+projectx    1578  0.0  0.1 467520  7224 ?        Ssl  ian21   0:00 /usr/libexec/gsd-sharing
+projectx    1581  0.0  0.1 318036  5940 ?        Ssl  ian21   0:00 /usr/libexec/gsd-smartcard
+projectx    1585  0.0  0.1 231808  5988 ?        Sl   ian21   0:00 /usr/libexec/gsd-disk-utility-n
+projectx    1595  0.0  0.1 322228  6956 ?        Ssl  ian21   0:00 /usr/libexec/gsd-sound
+projectx    1603  0.0  0.1 461572  6208 ?        Ssl  ian21   0:00 /usr/libexec/gsd-usb-protection
+projectx    1607  0.0  0.3 348260 15660 ?        Ssl  ian21   0:01 /usr/libexec/gsd-wacom
+projectx    1611  0.0  0.4 721992 19096 ?        Sl   ian21   0:01 /usr/libexec/evolution-data-ser
+projectx    1613  0.0  0.1 316884  5272 ?        Ssl  ian21   0:00 /usr/libexec/gsd-wwan
+projectx    1625  0.0  0.3 349480 12460 ?        Ssl  ian21   0:01 /usr/libexec/gsd-xsettings
+projectx    1670  0.0  0.2 345052  8036 ?        Sl   ian21   0:00 /usr/libexec/gsd-printer
+colord      1676  0.0  0.2 249168 11776 ?        Ssl  ian21   0:00 /usr/libexec/colord
+projectx    1707  0.0  0.1 165568  6100 ?        Sl   ian21   0:00 /usr/libexec/ibus-engine-simple
+projectx    1714  0.0  3.2 1172620 128476 ?      Sl   ian21   0:20 /snap/snap-store/959/usr/bin/sn
+projectx    1746  0.0  0.1 534128  5104 ?        Ssl  ian21   0:00 /usr/libexec/xdg-document-porta
+projectx    1946  0.0  0.2 613040  8444 ?        Ssl  ian21   0:01 /usr/libexec/xdg-desktop-portal
+projectx    1950  0.0  0.3 496620 13496 ?        Ssl  ian21   0:01 /usr/libexec/xdg-desktop-portal
+projectx    2368  0.1  1.3 1145668 54724 ?       Sl   ian21   0:37 /usr/bin/nautilus --gapplicatio
+projectx    2446  0.0  0.1 165176  5380 ?        Ssl  ian21   0:00 /usr/libexec/gvfsd-metadata
+projectx    2651  0.0  0.8 824248 35244 ?        Dsl  ian21   0:35 /usr/libexec/gnome-terminal-ser
+projectx    2659  0.0  0.0  13884  3972 pts/0    Ss+  ian21   0:00 bash
+projectx    2692  0.0  0.6 466672 27348 ?        Sl   ian21   0:02 update-notifier
+root        4305  0.0  0.0      0     0 ?        I<   ian21   0:00 [xfsalloc]
+root        4306  0.0  0.0      0     0 ?        I<   ian21   0:00 [xfs_mru_cache]
+root        4309  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsIO]
+root        4310  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsCommit]
+root        4311  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsCommit]
+root        4312  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsCommit]
+root        4313  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsCommit]
+root        4314  0.0  0.0      0     0 ?        S    ian21   0:00 [jfsSync]
+projectx   12678  0.0  0.7 741824 29568 ?        Sl   01:07   0:04 file-roller /home/projectx/Down
+root       19393  0.0  0.0      0     0 ?        I    04:52   0:01 [kworker/2:0-events]
+root       20838  0.0  0.0      0     0 ?        I    07:40   0:00 [kworker/3:0-rcu_gp]
+root       20933  0.0  0.0      0     0 ?        I    08:21   0:00 [kworker/0:1-events]
+projectx   20978  0.0  0.1  13884  5584 pts/1    Ss   08:24   0:00 bash
+projectx   21117  0.0  1.4 823196 58216 ?        Sl   08:28   0:01 /usr/bin/gedit --gapplication-s
+root       21153  0.0  0.0      0     0 ?        I    08:28   0:00 [kworker/u8:2-events_unbound]
+root       21154  0.0  0.0      0     0 ?        I    08:28   0:00 [kworker/u8:3-events_unbound]
+root       21157  0.0  0.0      0     0 ?        I    08:28   0:00 [kworker/2:2-events]
+root       21393  0.0  0.0      0     0 ?        R    08:55   0:00 [kworker/u8:0-events_unbound]
+root       21413  0.0  0.0      0     0 ?        I    08:59   0:00 [kworker/3:1-events]
+root       21416  0.0  0.0      0     0 ?        I    08:59   0:00 [kworker/1:2-events]
+root       21419  0.0  0.0      0     0 ?        I    08:59   0:00 [kworker/1:3-events]
+root       21422  0.0  0.0      0     0 ?        I    08:59   0:00 [kworker/0:2-cgroup_destroy]
+projectx   21466  0.0  0.0  14360  3524 pts/1    R+   09:05   0:00 ps aux
+

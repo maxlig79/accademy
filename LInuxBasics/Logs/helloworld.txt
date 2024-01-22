@@ -1,0 +1,26 @@
+projectx@projectx:~/Desktop$ touch hello.txt
+projectx@projectx:~/Desktop$ echo "Hello World!" > hello.txt
+projectx@projectx:~/Desktop$ cat hello.txt
+Hello World!
+projectx@projectx:~/Desktop$ grep "Hello" hello.txt
+Hello World!
+projectx@projectx:~/Desktop$ awk '{print $2}' hello.txt
+World!
+projectx@projectx:~/Desktop$ sed -i 's/Hello/Hi/' hello.txt
+projectx@projectx:~/Desktop$ cat hello.txt
+Hi World!
+
+
+Exercitiul 4.
+projectx@projectx:~/Desktop$ touch file1.txt file2.txt file3.txt
+projectx@projectx:~/Desktop$ ls -l file*.txt
+-rw-rw-r-- 1 projectx projectx 0 ian 22 09:29 file1.txt
+-rw-rw-r-- 1 projectx projectx 0 ian 22 09:29 file2.txt
+-rw-rw-r-- 1 projectx projectx 0 ian 22 09:29 file3.txt
+projectx@projectx:~/Desktop$ chmod 744 file1.txt
+projectx@projectx:~/Desktop$ chmod 664 file2.txt
+projectx@projectx:~/Desktop$ chmod a=r file3.txt
+projectx@projectx:~/Desktop$ ls -l file*.txt
+-rwxr--r-- 1 projectx projectx 0 ian 22 09:29 file1.txt
+-rw-rw-r-- 1 projectx projectx 0 ian 22 09:29 file2.txt
+-r--r--r-- 1 projectx projectx 0 ian 22 09:29 file3.txt

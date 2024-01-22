@@ -1,0 +1,22 @@
+Comenzi linux
+
+1.Grep - caută linii într-un fișier sau într-o ieșire de la o altă comandă care corespund unui șablon specificat și afișează acele linii
+Grep –I ignora case sensitive
+Grep –c afiseaza numarul de linii pe care il are sablonul
+Grep –r cauta in mod recursive in toate subdirectoarele
+2.More - afișează conținutul fișierului pe ecran, iar pentru a trece la următoarea porțiune de text
+3.Nano - deschide fișierul într-un editor de text în terminal, permițându-ți să faci modificări
+4. wc - este utilizată pentru a afișa informații despre numărul de linii, cuvinte și caractere dintr-un fișier
+Numărul de linii (-l): Afisează doar numărul de linii din fișier. 
+Numărul de cuvinte (-w): Afisează doar numărul de cuvinte din fișier.
+ Numărul de caractere (-c): Afisează doar numărul total de caractere din fișier.
+5. awk - interpretează și procesează fișierele sau fluxurile de date de intrare linie cu linie, aplicând reguli specifice pe baza unor șabloane și acțiuni specificate.
+6. wget - folosită pentru a descărca fișiere de la internet
+7. cut - utilizată pentru a extrage porțiuni din liniile unui fișier sau ale unei intrări text. Sintaxa de bază este cut -d DELIMITER -f FIELDS FILE
+DELIMITER: Separatorul dintre câmpuri. 
+FIELDS: Specifică câmpurile pe care să le extragă (poate fi un singur număr sau o listă de numere separate prin virgulă).
+ FILE: Fișierul sau fluxul de intrare.
+8.sed - Este utilizat pentru a efectua modificări în fluxurile de text, cum ar fi înlocuirea unor șiruri de caractere
+sed 's/șir_vechi/șir_nou/g' fisier
+Comanda de înlocuire. g înseamnă că înlocuirea trebuie făcută global pe linie
+
