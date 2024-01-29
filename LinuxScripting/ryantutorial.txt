@@ -1,0 +1,35 @@
+-Exercitiul 1
+projectx@projectx:~/Desktop/Internship/LinuxScripting$ ./counter.sh bashcrc
+Occurrences of 'StrictHostKeyChecking' in bashcrc: 4
+
+-Exercitiul 2
+projectx@projectx:~/Desktop/Internship/LinuxScripting$ ./counter_v2.sh bashcrc bashcrc.txt
+Occurrences of 'StrictHostKeyChecking' in bashcrc:
+145:#alias ivcssh='sshpass -p JBm59DbAAzP6Vfpm ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"  root@192.168.33.3'
+146:#alias ivc='sshpass -p JBm59DbAAzP6Vfpm ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"  root@172.17.0.1'
+149:alias ivcssh='sshpass -p oelinux123 ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"  root@192.168.33.3'
+150:alias ivc='sshpass -p oelinux123 ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"  root@172.17.0.1'
+
+Occurrences of 'StrictHostKeyChecking' in bashcrc.txt:
+5:dnzjnjnvjzdnhgb 546&*^&% StrictHostKeyChecking &)^%*)(*)^
+17:2345878044^%^&&*5StrictHostKeyChecking^%$$#$^
+
+-Exercitiul 3
+projectx@projectx:~/Desktop/Internship/LinuxScripting$ ./replace.sh
+Replacement completed. Check replacement_log.txt for details.
+
+-Exercitiul 4
+projectx@projectx:~/Desktop/Internship/LinuxScripting$ ./dbus.sh 
+This machine is currently using the battery.
+
+-Exercitiul 5
+projectx@projectx:~/Desktop/Internship/LinuxScripting$ ./bashcrc.sh
+Replaced ARTIFACTORY_API_KEY with value from bashcrc.txt.
+Replaced ARTIFACTORY_USER with value from bashcrc.txt.
+sed: -e expression #1, char 33: unknown option to `s'
+Replaced ANDROID_HOME with value from bashcrc.txt.
+sed: -e expression #1, char 27: unknown option to `s'
+Replaced JAVA_HOME with value from bashcrc.txt.
+Replaced IVI_ADB_SERIAL with value from bashcrc.txt.
+Search and replace completed.
+
