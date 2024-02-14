@@ -98,7 +98,7 @@ for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
     print("Binary payload is", bin_payload)
     bin_payload = change_values(bin_payload, signals[signal_name])
 
-    parsed_PDUs = parse_payload(payload2)
+parsed_PDUs = parse_payload(payload2)
 
 # Iterate for each extracted PDU and corresponding signal
 for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
