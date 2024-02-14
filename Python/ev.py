@@ -1,4 +1,13 @@
 def calculate_range(battery_level):
+    """
+    Calculate the estimated range of an electric vehicle based on the battery level.
+
+    Parameters:
+    - battery_level (float): Current battery level in percentage.
+
+    Returns:
+    - float: Estimated range in kilometers.
+    """
     # Constants
     total_battery_capacity = 62  # in kWh
     energy_consumption = 15.6  # in kWh/100km

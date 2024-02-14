@@ -2,10 +2,20 @@ import subprocess
 class Linux:
 
     def __init__(self, filename,destination):
+        """
+        Initialize the Linux class with filename and destination_filename.
+
+        Parameters:
+        - filename (str): Name of the file to be operated on.
+        - destination_filename (str): Name of the destination file for move and copy operations.
+        """
         self.filename = filename
         self.destination = destination
         
     def list_items(self):
+        """
+        Execute the 'ls' command to list items in the current directory.
+        """
         try:
             # Using subprocess.run to execute the "ls" command
             result = subprocess.run(["ls", "-l"], capture_output=True, text=True, check=True)
@@ -17,6 +27,9 @@ class Linux:
             print("Error:", e)
 
     def remove_item(self):
+        """
+        Execute the 'rm' command to remove a file.
+        """
         try:
             subprocess.run(['rm', self.filename])
             print(f"File '{self.filename}' deleted successfully.")
@@ -24,6 +37,9 @@ class Linux:
             print(f"Error executing rm command: {e}")
 
     def create_file(self):
+        """
+        Execute the 'touch' command to create a file.
+        """
         try:
             subprocess.run(['touch', self.filename])
             print(f"File '{self.filename}' created successfully.")
@@ -31,6 +47,9 @@ class Linux:
             print(f"Error executing touch command: {e}")
 
     def move_file(self):
+        """
+        Execute the 'mv' command to move a file to a specified destination.
+        """
         try:
             subprocess.run(['mv', self.filename, self.destination_filename])
             print(f"File '{self.filename}' moved to '{self.destination_filename}' successfully.")
@@ -38,6 +57,9 @@ class Linux:
             print(f"Error executing mv command: {e}")
 
     def copy_file(self):
+        """
+        Execute the 'cp' command to copy a file to a specified destination.
+        """
         try:
             subprocess.run(['cp', self.filename, self.destination_filename])
             print(f"File '{self.filename}' copied to '{self.destination_filename}' successfully.")

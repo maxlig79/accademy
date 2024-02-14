@@ -1,6 +1,18 @@
 import re
 
 def extract_last_word_between_timestamps(file_path, start_timestamp, end_timestamp,output_file_path):
+    """
+    Extract the last word from each line in a log file that falls within a specified timestamp range.
+
+    Parameters:
+    - file_path (str): Path to the log file.
+    - start_timestamp (str): Start timestamp (format: "HH:MM:SS.SSS").
+    - end_timestamp (str): End timestamp (format: "HH:MM:SS.SSS").
+    - output_file_path (str): Path to the output file to save the results.
+
+    Returns:
+    - list: List of extracted last words.
+    """
     result = []
 
     with open(file_path, 'r') as file:
@@ -14,7 +26,6 @@ def extract_last_word_between_timestamps(file_path, start_timestamp, end_timesta
                     words = line.split()
                     if words:
                         result.append(words[-1].strip())  # Remove leading/trailing whitespaces
-
     with open(output_file_path, 'w') as file:
         for words in result:
             file.write(words + '\n')

@@ -1,4 +1,22 @@
 def cnp_interpreter_decorator(func):
+    """
+    Decorator function for interpreting and validating CNP (Personal Identification Number).
+
+    Parameters:
+    - func (function): The function to be decorated.
+
+    Returns:
+    - function: Decorated function.
+    """
+    """
+        Wrapper function for CNP interpretation.
+
+        Parameters:
+        - cnp (str): CNP (Personal Identification Number) to be interpreted.
+
+        Returns:
+        - str: Result of CNP interpretation or an error message.
+    """
     def wrapper(cnp):
         # Verify the length of the CNP
         if len(cnp) != 13 or not cnp.isdigit():
@@ -64,6 +82,15 @@ def cnp_interpreter_decorator(func):
 
 @cnp_interpreter_decorator
 def process_cnp(interpretation):
+    """
+    Process the interpretation of a CNP.
+
+    Parameters:
+    - interpretation (str): Result of CNP interpretation.
+
+    Returns:
+    - str: Result of processing the interpretation.
+    """
     return f"Processing: {interpretation}"
 
 # Example usage
