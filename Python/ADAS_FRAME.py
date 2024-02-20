@@ -1,3 +1,5 @@
+import json
+
 def parse_payload(payload):
     """
     Parse the payload and extract PDUs.
@@ -21,9 +23,22 @@ def hex_to_bin(hex_strings):
     - str: Binary string.
     """
     bin_string = ''
+
     for hex_string in hex_strings:
         bin_string += bin(int(hex_string, 16))[2:].zfill(8)
     return bin_string.strip()
+
+def bin_to_hex(bin_string):
+    """
+    Convert a binary string to hexadecimal.
+
+    Parameters:
+    - bin_string (str): Binary string.
+
+    Returns:
+    - str: Hexadecimal string.
+    """
+    return hex(int(bin_string, 2))[2:]
 
 def change_values(bin_payload, signal):
     """
@@ -38,44 +53,22 @@ def change_values(bin_payload, signal):
     """
     byte_pos = signal['BytePos']
     current_byte = bin_payload[8 * byte_pos: 8 * byte_pos + 8]
-    print("Current byte is", current_byte)
     bit_pos = signal['BitPos']
     size = signal['Size']
     selected_byte = current_byte[7 - bit_pos:]
     selected_byte = selected_byte[:size]
-    print("Selected byte is", selected_byte)
     value = signal['Value']
     bin_conversion = format(value, '0{}b'.format(size))
-    print("Bin:", bin_conversion)
 
     # Modify the bin_payload by replacing the relevant part with the new value
     new_value = current_byte[:7 - bit_pos] + bin_conversion + current_byte[7 - bit_pos + size:]
     bin_payload = bin_payload[:8 * byte_pos] + new_value + bin_payload[8 * byte_pos + 8:]
 
-    print("New bin_payload is", bin_payload)
     return bin_payload
 
-
-signals = {
-    'LDW_AlertStatus': {
-        'BytePos': 2,
-        'BitPos': 5,
-        'Size': 2,
-        'Value': 2
-    },
-    'DW_FollowUpTimeDisplay': {
-        'BytePos': 4,
-        'BitPos': 7,
-        'Size': 6,
-        'Value': 45
-    },
-    'LCA_OverrideDisplay': {
-        'BytePos': 5,
-        'BitPos': 2,
-        'Size': 1,
-        'Value': 1
-    }
-}
+# Load signals from a JSON file
+with open('signals_adas.json', 'r') as file:
+    signals = json.load(file)
 
 payload1 = [
         '00', '06', '02', '08', '80', '00', '00', '00', '00', '00', '00', '00', '00', '05', 'D0', '08',
@@ -91,6 +84,7 @@ payload2 = [
 # Parse payload to extract signals
 parsed_PDUs = parse_payload(payload1)
 
+print("Payload1")
 # Iterate for each extracted PDU and corresponding signal
 for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
     print(f"Processing signal: {signal_name}")
@@ -100,11 +94,10 @@ for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
 
 parsed_PDUs = parse_payload(payload2)
 
+print("Payload2")
 # Iterate for each extracted PDU and corresponding signal
 for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
     print(f"Processing signal: {signal_name}")
     bin_payload = hex_to_bin(bin_payload)
     print("Binary payload is", bin_payload)
     bin_payload = change_values(bin_payload, signals[signal_name])
-
-

@@ -1,3 +1,5 @@
+import json
+
 def extract_value(frame, signal):
     """
     Extract the value of the given signal based on the byte position,
@@ -24,28 +26,20 @@ def extract_value(frame, signal):
 
     return value
 
-signals = {
-    'PassengerSeatMemoRequest': {
-        'BytePos': 0,
-        'BitPos': 7,
-        'Size': 3
-    },
-    'TimeFormatDisplay': {
-        'BytePos': 5,
-        'BitPos': 3,
-        'Size': 1
-    },
-    'ClimFPrightBlowingRequest': {
-        'BytePos': 5,
-        'BitPos': 7,
-        'Size': 4
-    }
-}
+# Load signals from a JSON file
+with open('signals.json', 'r') as file:
+    signals = json.load(file)
 
-frames = {
+# Define frames as a dictionary in a string
+frames_str = """
+{
     'IVI_frame_1': [0x60, 0x20, 0x45, 0x6C, 0xFE, 0x3D, 0x4B, 0xAA],
     'IVI_frame_2': [0x40, 0x12, 0x6C, 0xAF, 0x05, 0x78, 0x4A, 0x04]
 }
+"""
+
+# Load frames from the string
+frames = eval(frames_str)
 
 if __name__ == "__main__":
     for frame_name, frame in frames.items():

@@ -1,0 +1,17 @@
+{
+    "PassengerSeatMemoRequest": {
+        "BytePos": 0,
+        "BitPos": 7,
+        "Size": 3
+    },
+    "TimeFormatDisplay": {
+        "BytePos": 5,
+        "BitPos": 3,
+        "Size": 1
+    },
+    "ClimFPrightBlowingRequest": {
+        "BytePos": 5,
+        "BitPos": 7,
+        "Size": 4
+    }
+}
