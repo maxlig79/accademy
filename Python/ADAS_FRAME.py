@@ -81,7 +81,9 @@ payload2 = [
         '00', '00', '00', '00', '00', '00', '00', '11', '29', 'FB', '84', '33', '1D', 'E5', '5E', '9D'
     ]
 
-# Parse payload to extract signals
+# Store modified frames for payload1
+modified_frames1 = []
+
 parsed_PDUs = parse_payload(payload1)
 
 print("Payload1")
@@ -91,6 +93,16 @@ for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
     bin_payload = hex_to_bin(bin_payload)
     print("Binary payload is", bin_payload)
     bin_payload = change_values(bin_payload, signals[signal_name])
+    modified_frames1.append(bin_payload)
+    print("Updated Hex payload1 is", bin_to_hex(bin_payload))
+
+# Print the modified ADAS frames for payload1
+print("Modified ADAS Frames for Payload1:")
+for frame in modified_frames1:
+    print(bin_to_hex(frame))
+
+# Store modified frames for payload2
+modified_frames2 = []
 
 parsed_PDUs = parse_payload(payload2)
 
@@ -101,3 +113,10 @@ for bin_payload, signal_name in zip(parsed_PDUs, signals.keys()):
     bin_payload = hex_to_bin(bin_payload)
     print("Binary payload is", bin_payload)
     bin_payload = change_values(bin_payload, signals[signal_name])
+    modified_frames2.append(bin_payload)
+    print("Updated Hex payload2 is", bin_to_hex(bin_payload))
+
+# Print the modified ADAS frames for payload2
+print("Modified ADAS Frames for Payload2:")
+for frame in modified_frames2:
+    print(bin_to_hex(frame))
